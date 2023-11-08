@@ -28,7 +28,7 @@ done
 sudo sed -i '/^<\!--TERMS-->$/r'<(./code serve-web --port 9000 --host 0.0.0.0 | grep -v error) $MIRTE_SRC_DIR/mirte-install-scripts/sites/vscode/index.html
 
 # Stop the server started earlier
-kill $code_pid
+sudo kill $code_pid
 
 sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-vscode.service /lib/systemd/system/
 sudo systemctl enable mirte-vscode

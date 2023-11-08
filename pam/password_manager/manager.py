@@ -85,7 +85,7 @@ def update_nginx(new_password: str) -> None:
 
 def update_passwd(new_password: str) -> None:
     ret = subprocess.run( # update the real user password by using passwd, this will also update the passwd file
-        f'/bin/bash -c "echo -e "{new_password}\n{new_password}" | sudo passwd mirte"',
+        f'/bin/bash -c "echo "mirte:{new_password}" | chpasswd"',
         capture_output=True,
         shell=True,
     )

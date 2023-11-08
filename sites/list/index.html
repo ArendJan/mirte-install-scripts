@@ -18,32 +18,26 @@
 
         async function fetchStatus(address) {
             return new Promise((res) => {
-                var client = new XMLHttpRequest();
-                client.onreadystatechange = function () {
-                    // in case of network errors this might not give reliable results
-                    if (this.readyState == 4) {
-                        returnStatus(this, this.status);
-                        if (this.status == 200) {
-                            console.log("The url is available");
-                            res(true);
-                            // send an event
-                        }
-                        else {
-                            console.log("The url returned status code " + this.status);
-                            res(false);
-                            // send a different event
-                        }
 
+                fetch(address,
+                    { method: "HEAD", redirect: "error" }
+                ).then((res2) => {
+                    if (res2.ok) {
+                        return res(true);
+                        // file is present at URL
+                    } else {
+                        res(false);
+                        // file is not present at URL
                     }
-                }
-                client.open("HEAD", address);
-                client.send();
+                }).catch((e)=>{
+                    res(false);
+                });
 
             })
         }
         async function checkSites() {
             proms = []
-            pages = ["/", "/docs/", "/ros-video/", "/jupyter/", "/code/"]
+            pages = ["/", "/docs/", "/ros-video/", "/jupyter/", "/code/", "/login/"]
             for (page of pages) {
                 proms.push(fetchStatus(page));
             }
