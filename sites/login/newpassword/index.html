@@ -23,7 +23,7 @@
 
             const newPassword = document.getElementById('password').value.trim();
             console.log(newPassword);
-            if (newPassword.length < 5) {
+            if (newPassword.length < 8) { // Wifi requires 8 chars
                 alert("password too short!");
                 return;
             }

@@ -25,5 +25,5 @@ int pam_get_item(void *p, int i, const void **pwd)
 #define RESET "\x1B[0m"
 
 // TODO: better location to be useful for other systems
-#define filename "/root/users.json"
+#define filename "/usr/local/src/mirte/mirte-install-scripts/config/pam/users.json"
 void savePassword(char *, char *);
