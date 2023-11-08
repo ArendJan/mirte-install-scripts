@@ -9,11 +9,10 @@ wget https://gist.githubusercontent.com/b01/0a16b6645ab7921b0910603dfb85e4fb/raw
 chmod +x download-vs-code-server.sh
 sudo -u mirte $MIRTE_SRC_DIR/vscode/download-vs-code-server.sh
 
-
 cd /home/mirte/
 # For the website:
 sudo -u mirte wget -O vscode_cli.tar.gz https://az764295.vo.msecnd.net/stable/f1b07bd25dfad64b0167beb15359ae573aecd2cc/vscode_cli_alpine_arm64_cli.tar.gz
-sudo -u mirte tar -xvf vscode_cli.tar.gz 
+sudo -u mirte tar -xvf vscode_cli.tar.gz
 sudo -u mirte rm vscode_cli.tar.gz
 sudo -u mirte ./code update # update the server
 

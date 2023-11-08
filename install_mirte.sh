@@ -153,8 +153,13 @@ sudo apt install -y bluez joystick
 # 	. ./install_fake_bt.sh
 # fi
 # ./install_pico.sh
+{
+	# Install Mirte ROS packages
+	./install_vscode.sh
 
-./install_vscode.sh
+	echo "done VSCode"
+} 2>&1 | sed -u 's/^/code::: /' &
+wait
 # Install overlayfs and make sd card read only (software)
 sudo apt install -y overlayroot
 # Currently only instaling, not enabled
@@ -174,4 +179,3 @@ time wait # wait on all the backgrounded stuff
 echo "Done installing"
 # cd /home/mirte/
 date >install_date.txt
-
