@@ -41,20 +41,17 @@ event_loop = asyncio.get_event_loop()
 
 
 def main():
-    # event_loop.add_signal_handler(
-    #     signal.SIGINT, functools.partial(asyncio.ensure_future, shutdown())
-    # )
-    # event_loop.add_signal_handler(
-    #     signal.SIGTERM, functools.partial(asyncio.ensure_future, shutdown())
-    # )
     observer = Observer()
     event_handler = MyEventHandler()
     observer.schedule(event_handler, watch_nginx_output)
     observer.schedule(event_handler, watch_pam_output)
     observer.start()
-    # event_loop.run_until_complete(main_loop())
-    # stop_all()
-
+    try:
+        while True:
+            time.sleep(1)
+    finally:
+        observer.stop()
+        observer.join()
 
 last_copy = time.time()
 
@@ -62,7 +59,7 @@ last_copy = time.time()
 def get_new_password(source: Update_source) -> str:
     if source == Update_source.PAM:
         # open file and get mirte user
-        with open(watch_nginx_output, "r") as file:
+        with open(watch_pam_output, "r") as file:
             passwords = yaml.safe_load(file)
             if "mirte" in passwords:
                 return passwords["mirte"]
@@ -110,17 +107,6 @@ def update_passwords(source: Update_source) -> None:
     update_nginx(new_password)
     update_wifi(new_password)
 
-
-# def copy_on_modify(src_path):
-#     global last_copy
-#     # otherwise it is triggering itself. 1s backoff time
-#     if time.time() - last_copy < 1:
-#         return
-#     last_copy = time.time()
-#     if src_path == tmx_config_path:
-#         copy(src_path, sd_config_path)
-#     else:  # TODO: restart telemetrix node
-#         copy(src_path, tmx_config_path)
 
 
 class MyEventHandler(FileSystemEventHandler):

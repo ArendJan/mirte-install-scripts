@@ -153,6 +153,17 @@ sudo apt install -y bluez joystick
 # 	. ./install_fake_bt.sh
 # fi
 ./install_pico.sh
+
+# Install overlayfs and make sd card read only (software)
+sudo apt install -y overlayroot
+# Currently only instaling, not enabled
+#sudo bash -c "echo 'overlayroot=\"tmpfs\"' >> /etc/overlayroot.conf"
+
+cd $MIRTE_SRC_DIR/mirte-install-scripts/pam/password_manager/ || true
+python3 -m pip install -r requirements.txt
+sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-passwords.service /lib/systemd/system/
+sudo systemctl enable mirte-passwords
+
 echo "Cleaning cache"
 sudo du -sh /var/cache/apt/archives
 sudo apt clean
