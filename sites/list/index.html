@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Index</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+
+<body>
+    <div id="links"></div>
+
+    <script>
+        function returnStatus(req, status) {
+            //console.log(req);
+        }
+
+        async function fetchStatus(address) {
+            return new Promise((res) => {
+                var client = new XMLHttpRequest();
+                client.onreadystatechange = function () {
+                    // in case of network errors this might not give reliable results
+                    if (this.readyState == 4) {
+                        returnStatus(this, this.status);
+                        if (this.status == 200) {
+                            console.log("The url is available");
+                            res(true);
+                            // send an event
+                        }
+                        else {
+                            console.log("The url returned status code " + this.status);
+                            res(false);
+                            // send a different event
+                        }
+
+                    }
+                }
+                client.open("HEAD", address);
+                client.send();
+
+            })
+        }
+        async function checkSites() {
+            proms = []
+            pages = ["/", "/docs/", "/ros-video/", "/jupyter/", "/code/"]
+            for (page of pages) {
+                proms.push(fetchStatus(page));
+            }
+            out = await Promise.all(proms);
+            console.log(out);
+            l = out.map((v, i) => {
+                return `<a href="${pages[i]}">${v ? '✔' : '❌'}: ${pages[i]}</a>`;
+            })
+            console.log(l);
+            document.getElementById('links').innerHTML = l.join("<br>");
+        }
+        checkSites();
+        // console.log(fetchStatus("/"));
+    </script>
+</body>
+
+</html>

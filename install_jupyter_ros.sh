@@ -20,7 +20,7 @@ pip3 install markupsafe==2.0.1 pyzmq==24 zipp==3.1.0
 pip3 install ipython==8.7.0 ipykernel==6.17.1 ipywidgets==7.7.2 \
 	jupyter-client==7.4.8 jupyter-core==5.1.0 \
 	nbclient==0.7.2 nbconvert==7.2.6 nbformat==5.7.0 \
-	qtconsole==5.4.0 traitlets==5.6.0
+	qtconsole==5.4.0 traitlets==5.6.0 matplotlib==3.5.3
 pip3 install notebook==6.5.2 bqplot==0.12.18 pyyaml
 pip3 install --pre jupyros==0.7.0a0
 jupyter nbextension enable --py --sys-prefix jupyros
