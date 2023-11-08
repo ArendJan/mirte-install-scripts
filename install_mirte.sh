@@ -152,7 +152,7 @@ sudo apt install -y bluez joystick
 # 	# currently only supporting cheap USB dongles on OrangePi
 # 	. ./install_fake_bt.sh
 # fi
-./install_pico.sh
+# ./install_pico.sh
 
 ./install_vscode.sh
 # Install overlayfs and make sd card read only (software)
