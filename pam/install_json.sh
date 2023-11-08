@@ -4,8 +4,8 @@ cd json-c || exit 1
 mkdir build
 cd build || exit 1
 cmake -DCMAKE_BUILD_TYPE=Release ..
-make
-make install # requires sudo privileges
+make -j
+make install -j # requires sudo privileges
 cd ../../
 rm -rf json-c
 ldconfig
