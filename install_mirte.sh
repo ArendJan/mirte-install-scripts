@@ -154,6 +154,7 @@ sudo apt install -y bluez joystick
 # fi
 ./install_pico.sh
 
+./install_vscode.sh
 # Install overlayfs and make sd card read only (software)
 sudo apt install -y overlayroot
 # Currently only instaling, not enabled
