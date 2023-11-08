@@ -1,4 +1,5 @@
 #!/bin/bash
+set -xe
 MIRTE_SRC_DIR=/usr/local/src/mirte
 
 cd $MIRTE_SRC_DIR || exit
@@ -20,6 +21,7 @@ sudo -u mirte ./code update # update the server
 sudo -u mirte ./code serve-web --port 9000 --host 0.0.0.0 --without-connection-token --accept-server-license-terms &
 code_pid=$!
 until [ "$(wget -qO- http://localhost:9000/ | wc --bytes)" -gt "1000" ]; do
+	echo "wait for vscode"
 	sleep 5
 done
 

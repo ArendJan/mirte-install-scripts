@@ -10,7 +10,7 @@ sudo chown mirte:mirte /home/mirte/workdir
 
 sudo ./install_pam.sh # setup pam before changing the password for the mirte user.
 
-echo -e "mirte_mirte\nmirte_mirte" | sudo passwd mirte
+echo "mirte:{new_password}" | sudo chpasswd
 sudo mkdir -p $MIRTE_SRC_DIR
 sudo chown mirte:mirte $MIRTE_SRC_DIR
 
