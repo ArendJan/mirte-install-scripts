@@ -8,7 +8,6 @@ sudo useradd -m -G sudo,audio -s /bin/bash mirte
 sudo mkdir /home/mirte/workdir
 sudo chown mirte:mirte /home/mirte/workdir
 
-sudo ./install_pam.sh # setup pam before changing the password for the mirte user.
 
 echo "mirte:mirte_mirte" | sudo chpasswd
 sudo mkdir -p $MIRTE_SRC_DIR

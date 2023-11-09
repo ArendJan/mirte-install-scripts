@@ -45,13 +45,13 @@ sudo bash -c "echo '[global]' > /etc/pip.conf"
 sudo bash -c "echo 'extra-index-url=https://www.piwheels.org/simple' >> /etc/pip.conf"
 
 if $INSTALL_VSCODE; then
-{
-	# Install Mirte ROS packages
-	./install_vscode.sh
+	{
+		# Install Mirte ROS packages
+		./install_vscode.sh
 
-	echo "done VSCode"
-} 2>&1 | sed -u 's/^/code::: /' &
-wait
+		echo "done VSCode"
+	} 2>&1 | sed -u 's/^/code::: /' &
+	wait
 fi
 if $INSTALL_ROS; then
 	{
@@ -139,6 +139,14 @@ if ! $PARALLEL; then
 	wait
 fi
 
+if $INSTALL_PAM; then
+{ #install PAM after creating user, but there is no need to have the files 
+	sudo ./install_pam.sh
+	} 2>&1 | sed -u 's/^/PAM::: /' &
+fi
+if ! $PARALLEL; then
+	wait
+fi
 if $INSTALL_ROS; then
 	wait # rosdep does wait for other apt scripts to finish, then it just fails installing. If we wait for the others to finish, there won't be parralel apt scripts running.
 	{
