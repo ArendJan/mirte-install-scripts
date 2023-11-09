@@ -8,7 +8,7 @@ cd vscode || exit
 wget https://gist.githubusercontent.com/b01/0a16b6645ab7921b0910603dfb85e4fb/raw/ea48d972a176b90b3956de59eb7a43da9be86ec5/download-vs-code-server.sh
 chmod +x download-vs-code-server.sh
 sudo update-ca-certificates -f
-sudo -u mirte $MIRTE_SRC_DIR/vscode/download-vs-code-server.sh
+sudo -u mirte $MIRTE_SRC_DIR/vscode/download-vs-code-server.sh || true
 # arm-image.mirteopi2: code::: curl: (35) OpenSSL SSL_connect: Connection reset by peer in connection to update.code.visualstudio.com:443
 cd /home/mirte/
 # For the website:
