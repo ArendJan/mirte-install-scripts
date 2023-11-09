@@ -14,6 +14,7 @@ export UPDATE=false
 	export INSTALL_NETWORK=true
 	export INSTALL_PROVISIONING=true
 	export PARALLEL=true
+	export INSTALL_VSCODE=true
 )
 # Update
 sudo apt update
@@ -43,6 +44,15 @@ curl -sSL 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC1CF6E31E6BADE
 sudo bash -c "echo '[global]' > /etc/pip.conf"
 sudo bash -c "echo 'extra-index-url=https://www.piwheels.org/simple' >> /etc/pip.conf"
 
+if $INSTALL_VSCODE; then
+{
+	# Install Mirte ROS packages
+	./install_vscode.sh
+
+	echo "done VSCode"
+} 2>&1 | sed -u 's/^/code::: /' &
+wait
+fi
 if $INSTALL_ROS; then
 	{
 		# Install telemetrix
@@ -153,13 +163,7 @@ sudo apt install -y bluez joystick
 # 	. ./install_fake_bt.sh
 # fi
 # ./install_pico.sh
-{
-	# Install Mirte ROS packages
-	./install_vscode.sh
 
-	echo "done VSCode"
-} 2>&1 | sed -u 's/^/code::: /' &
-wait
 # Install overlayfs and make sd card read only (software)
 sudo apt install -y overlayroot
 # Currently only instaling, not enabled
