@@ -8,7 +8,6 @@ sudo useradd -m -G sudo,audio -s /bin/bash mirte
 sudo mkdir /home/mirte/workdir
 sudo chown mirte:mirte /home/mirte/workdir
 
-
 echo "mirte:mirte_mirte" | sudo chpasswd
 sudo mkdir -p $MIRTE_SRC_DIR
 sudo chown mirte:mirte $MIRTE_SRC_DIR
