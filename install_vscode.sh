@@ -33,7 +33,8 @@ done
 sed -i $'/<!--TERMS-->/{r out.txt\nd}' $MIRTE_SRC_DIR/mirte-install-scripts/sites/vscode/index.html
 rm out.txt
 # Stop the server started earlier
-sudo kill -9 $code_pid
+sudo kill -9 -$(ps -o pgid= $code_pid | grep -o '[0-9]*')
+# sudo kill -9 $code_pid
 
 sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-vscode.service /lib/systemd/system/
 sudo systemctl enable mirte-vscode
