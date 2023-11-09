@@ -29,7 +29,8 @@ done
 ./code serve-web --port 9000 --host 0.0.0.0 | grep -v error > out.txt
 
 # sudo sed -i '/^<\!--TERMS-->$/r'<() $MIRTE_SRC_DIR/mirte-install-scripts/sites/vscode/index.html
-sed -i $'/b/{r out.txt\nd}' $MIRTE_SRC_DIR/mirte-install-scripts/sites/vscode/index.html
+sed -i $'/<!--TERMS-->/{r out.txt\nd}' $MIRTE_SRC_DIR/mirte-install-scripts/sites/vscode/index.html
+rm out.txt
 # Stop the server started earlier
 sudo kill $code_pid
 
