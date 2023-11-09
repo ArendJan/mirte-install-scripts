@@ -3,7 +3,7 @@ set -xe
 MIRTE_SRC_DIR=/usr/local/src/mirte
 
 cd $MIRTE_SRC_DIR || exit
-mkdir vscode
+mkdir vscode || true
 cd vscode || exit
 wget https://gist.githubusercontent.com/b01/0a16b6645ab7921b0910603dfb85e4fb/raw/ea48d972a176b90b3956de59eb7a43da9be86ec5/download-vs-code-server.sh
 chmod +x download-vs-code-server.sh
@@ -32,7 +32,7 @@ done
 sed -i $'/<!--TERMS-->/{r out.txt\nd}' $MIRTE_SRC_DIR/mirte-install-scripts/sites/vscode/index.html
 rm out.txt
 # Stop the server started earlier
-sudo kill $code_pid
+sudo kill -9 $code_pid
 
 sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-vscode.service /lib/systemd/system/
 sudo systemctl enable mirte-vscode
