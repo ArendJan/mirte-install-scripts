@@ -13,6 +13,7 @@ export UPDATE=false
 	export EXPIRE_PASSWD=true
 	export INSTALL_NETWORK=true
 	export INSTALL_PROVISIONING=true
+	export INSTALL_PAM=true
 	export PARALLEL=true
 	export INSTALL_VSCODE=true
 )
