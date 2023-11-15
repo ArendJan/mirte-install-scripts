@@ -52,8 +52,11 @@ if $INSTALL_VSCODE; then
 
 		echo "done VSCode"
 	} 2>&1 | sed -u 's/^/code::: /' &
+fi
+if ! $PARALLEL; then
 	wait
 fi
+
 if $INSTALL_ROS; then
 	{
 		# Install telemetrix
