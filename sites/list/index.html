@@ -10,14 +10,12 @@
 
 <body>
     <div id="links"></div>
-
+    <!-- TODO: make this site more visually pleasing and maybe show status of each component. -->
     <script>
-        function returnStatus(req, status) {
-            //console.log(req);
-        }
 
+        // TODO: This function does not work 100%
         async function fetchStatus(address) {
-            return new Promise((res) => {
+            return new Promise((res) => { 
 
                 fetch(address,
                     { method: "HEAD", redirect: "error" }
@@ -37,20 +35,20 @@
         }
         async function checkSites() {
             proms = []
-            pages = ["/", "/docs/", "/ros-video/", "/jupyter/", "/code/", "/login/"]
+            pages = ["/", "/docs/", "/ros-video/", "/jupyter/", "/code/", "/login/", "/login/changepassword/", "/list/"]
             for (page of pages) {
-                proms.push(fetchStatus(page));
+                document.getElementById('links').innerHTML = l.map(v=>`<a href="${v}">${v}</a>`).join("<br>");
+                // proms.push(fetchStatus(page));
             }
-            out = await Promise.all(proms);
-            console.log(out);
-            l = out.map((v, i) => {
-                return `<a href="${pages[i]}">${v ? '✔' : '❌'}: ${pages[i]}</a>`;
-            })
-            console.log(l);
+            // out = await Promise.all(proms);
+            // console.log(out);
+            // l = out.map((v, i) => {
+            //     return `<a href="${pages[i]}">${v ? '✔' : '❌'}: ${pages[i]}</a>`;
+            // })
+            // console.log(l);
             document.getElementById('links').innerHTML = l.join("<br>");
         }
         checkSites();
-        // console.log(fetchStatus("/"));
     </script>
 </body>
 

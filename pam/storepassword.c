@@ -11,8 +11,7 @@ PAM_EXTERN int pam_sm_chauthtok(pam_handle_t *pamh, int flags, int argc,
   int r = pam_get_item(pamh, PAM_AUTHTOK, (const void **)&pwd);
   pam_get_item(pamh, PAM_USER, (const void **)&user);
   printf(GRN
-         "Mirte:\t" RESET
-         "The new password for \"%s\" is \"%s\". Very nice, very secure!!\n" GRN
+         "Mirte:\t" RESET "The new password for \"%s\" is \"%s\".\n" GRN
          "Mirte:\t" RESET "The password will be updated for the webpages.\n" GRN
          "Mirte:\t" RESET "The Wi-Fi password will be updated at next boot!\n",
          user, pwd);
