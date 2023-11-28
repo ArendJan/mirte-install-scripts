@@ -1,0 +1,27 @@
+name: test-clang-format
+
+on: [push, pull_request]
+
+jobs:
+  c_style_check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: DoozyX/clang-format-lint-action@v0.14
+      with:
+        source: '.'
+        # exclude: './third_party ./external'
+        extensions: 'c,h,cpp,hpp'
+        clangFormatVersion: 14
+        style: llvm
+  c_build_check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: DoozyX/clang-format-lint-action@v0.14
+    - uses: lukka/get-cmake@latest
+    - run: |
+        apt update && apt install libpam0g-dev -y
+        ./install_pam.sh
+        ./pam/build/myprogram

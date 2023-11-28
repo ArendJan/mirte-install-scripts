@@ -1,15 +1,14 @@
 #pragma once
-#include <stdint.h>
+#include <dirent.h>
+#include <errno.h>
+#include <pwd.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <pwd.h>
 #ifdef PAM_MOCK
-int pam_get_item(void *p, int i, const void **pwd)
-{
-    return 0;
-}
+int pam_get_item(void *p, int i, const void **pwd) { return 0; }
 #else
 #include <security/pam_appl.h>
 #include <security/pam_modules.h>
@@ -24,6 +23,7 @@ int pam_get_item(void *p, int i, const void **pwd)
 #define WHT "\x1B[37m"
 #define RESET "\x1B[0m"
 
-// TODO: better location to be useful for other systems
-#define filename "/usr/local/src/mirte/mirte-install-scripts/config/pam/users.json"
+#define password_folder "/usr/local/src/mirte/mirte-install-scripts/config/pam/"
+#define filename password_folder "users.json"
 void savePassword(char *, char *);
+int checkDirectory();

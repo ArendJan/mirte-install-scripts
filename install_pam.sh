@@ -6,4 +6,4 @@ mkdir build
 cd build || exit 1
 cmake -DCMAKE_BUILD_TYPE=Release .. # will install json-c when not yet installed
 make -j
-make install -j # requires sudo privileges
+sudo make install -j # requires sudo privileges

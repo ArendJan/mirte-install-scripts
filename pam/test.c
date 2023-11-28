@@ -2,6 +2,6 @@
 #include "mirte_pam.h"
 
 int main() {
-    // will just update the file
-    savePassword("asdf","ww");
+  // will just update the file
+  savePassword("asdf", "ww");
 }

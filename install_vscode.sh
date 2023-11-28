@@ -2,38 +2,21 @@
 set -xe
 MIRTE_SRC_DIR=/usr/local/src/mirte
 
+# VScode in 2 parts:
+# - vscode remote server, when using the ssh plugin from another computer
+# - 'vscode' website
+
+# First part:
 cd $MIRTE_SRC_DIR || exit
 mkdir vscode || true
 cd vscode || exit
 wget https://gist.githubusercontent.com/b01/0a16b6645ab7921b0910603dfb85e4fb/raw/ea48d972a176b90b3956de59eb7a43da9be86ec5/download-vs-code-server.sh
 chmod +x download-vs-code-server.sh
-sudo update-ca-certificates -f
-sudo -u mirte $MIRTE_SRC_DIR/vscode/download-vs-code-server.sh || true
-# arm-image.mirteopi2: code::: curl: (35) OpenSSL SSL_connect: Connection reset by peer in connection to update.code.visualstudio.com:443
-cd /home/mirte/
-# For the website:
-sudo -u mirte wget -O vscode_cli.tar.gz https://az764295.vo.msecnd.net/stable/f1b07bd25dfad64b0167beb15359ae573aecd2cc/vscode_cli_alpine_arm64_cli.tar.gz
-sudo -u mirte tar -xvf vscode_cli.tar.gz
-sudo -u mirte rm vscode_cli.tar.gz
-sudo -u mirte ./code update # update the server
+sudo -u mirte $MIRTE_SRC_DIR/vscode/download-vs-code-server.sh
 
-# first load it will trigger a download of the actual server. The Mirtes don't have networking, so download it during sd generation
-./code serve-web --port 9000 --host 0.0.0.0 --without-connection-token --accept-server-license-terms &
-code_pid=$!
-until [ "$(wget -qO- http://localhost:9000/ | wc --bytes)" -gt "1000" ]; do
-	echo "wait for vscode"
-	sleep 5
-done
-
-# Add the license terms after <!--TERMS--> in the vscode/index.html file that the users must accept before using it.
-# rerun vscode with the same port to let it stop immediately, but it will show the license terms
-./code serve-web --port 9000 --host 0.0.0.0 | grep -v error >out.txt
-
-# sudo sed -i '/^<\!--TERMS-->$/r'<() $MIRTE_SRC_DIR/mirte-install-scripts/sites/vscode/index.html
-sed -i $'/<!--TERMS-->/{r out.txt\nd}' $MIRTE_SRC_DIR/mirte-install-scripts/sites/vscode/index.html
-rm out.txt
-# Stop the server started earlier
-sudo kill -9 $code_pid
-
-sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-vscode.service /lib/systemd/system/
-sudo systemctl enable mirte-vscode
+# Second part:
+cd $MIRTE_SRC_DIR/vscode || exit
+sudo -u mirte bash -c "curl -fsSL https://code-server.dev/install.sh | sh"
+sudo -u mirte bash -c "mkdir ~/.config/code-server && cp $MIRTE_SRC_DIR/mirte-install-scripts/config/code_server_config.yaml ~/.config/code_server/config.yaml"
+# sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-vscode.service /lib/systemd/system/
+sudo systemctl enable code-server@mirte.service # Added by the code-server install script

@@ -1,0 +1,10 @@
+# Don't have network, so don't try to upload or download
+disable-update-check: true
+disable-telemetry: true
+disable-workspace-trust: true # Trust everything on the Mirte robot
+bind-addr: 127.0.0.1:9000 # Nginx will forward it from this location
+auth: none # password authentication is done by nginx as local is allowed
+# password: _PASSWORD_ # no need for password 
+cert: false
+disable-getting-started-override: true # don't show coder advertisement
+app-name: "Mirte" # does not work ATM
