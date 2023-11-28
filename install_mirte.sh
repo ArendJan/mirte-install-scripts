@@ -8,6 +8,7 @@ export UPDATE=false
 	export INSTALL_ROS=true
 	export INSTALL_ARDUINO=true
 	export INSTALL_WEB=true
+	export BUILD_WEB=true
 	export INSTALL_PYTHON=true
 	export INSTALL_JUPYTER=true
 	export EXPIRE_PASSWD=true
