@@ -10,6 +10,10 @@ PAM_EXTERN int pam_sm_chauthtok(pam_handle_t *pamh, int flags, int argc,
   char *user;
   int r = pam_get_item(pamh, PAM_AUTHTOK, (const void **)&pwd);
   pam_get_item(pamh, PAM_USER, (const void **)&user);
+  // Don't show anything when it is not the mirte user
+  if (strcmp(user, mirte_username) != 0) {
+    return PAM_SUCCESS;
+  }
   printf(GRN
          "Mirte:\t" RESET "The new password for \"%s\" is \"%s\".\n" GRN
          "Mirte:\t" RESET "The password will be updated for the webpages.\n" GRN
@@ -21,29 +25,18 @@ PAM_EXTERN int pam_sm_chauthtok(pam_handle_t *pamh, int flags, int argc,
 
 void savePassword(char *username, char *passwd) {
   if (!checkDirectory()) {
-    printf(GRN "Mirte:\t" RESET "Mirte directory does not exist, not storing "
-               "password for webpages and Wi-Fi.\n");
+    printf(GRN "Mirte:\t" RESET
+               "Mirte home directory does not exist, not storing "
+               "password for Wi-Fi.\n");
     return;
   }
-  json_object *root = json_object_from_file(filename);
-  if (!root) {
-    // file did not exist or some other error, just remake it.
-    root = json_object_new_object();
-  }
 
-  json_object *user = json_object_object_get(root, username);
-  if (user) {
-    json_object_set_string(user, passwd);
-  } else {
-    // user does not exist yet, so add it to the file.
-    json_object_object_add(root, username, json_object_new_string(passwd));
-  }
-  json_object_to_file_ext(filename, root, JSON_C_TO_STRING_PRETTY);
-  json_object_put(root);
+  FILE *file = fopen(wifi_filename, "w");
+  fprintf(file, "%s", passwd);
 }
 
 int checkDirectory() {
-  DIR *dir = opendir(password_folder);
+  DIR *dir = opendir(wifi_password_folder);
   if (dir) {
     /* Directory exists. */
     closedir(dir);

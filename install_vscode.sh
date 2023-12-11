@@ -18,5 +18,4 @@ sudo -u mirte $MIRTE_SRC_DIR/vscode/download-vs-code-server.sh
 cd $MIRTE_SRC_DIR/vscode || exit
 sudo -u mirte bash -c "curl -fsSL https://code-server.dev/install.sh | sh"
 sudo -u mirte bash -c "mkdir ~/.config/code-server && cp $MIRTE_SRC_DIR/mirte-install-scripts/config/code_server_config.yaml ~/.config/code_server/config.yaml"
-# sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-vscode.service /lib/systemd/system/
 sudo systemctl enable code-server@mirte.service # Added by the code-server install script

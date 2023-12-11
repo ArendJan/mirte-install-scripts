@@ -10,6 +10,12 @@
 PAM_EXTERN int pam_sm_chauthtok(pam_handle_t *pamh, int flags, int argc,
                                 const char **argv) {
   if (flags == PAM_PRELIM_CHECK) {
+    char *user;
+    pam_get_item(pamh, PAM_USER, (const void **)&user);
+    // Don't show anything when it is not the mirte user
+    if (strcmp(user, mirte_username) != 0) {
+      return PAM_SUCCESS;
+    }
     printf(GRN
            "Mirte:\t" RESET "Your password will be stored in plaintext, so "
            "don't make it your super secret password!\n" GRN "Mirte:\t" RESET

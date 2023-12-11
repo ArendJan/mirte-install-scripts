@@ -13,7 +13,6 @@ int pam_get_item(void *p, int i, const void **pwd) { return 0; }
 #include <security/pam_appl.h>
 #include <security/pam_modules.h>
 #endif
-#include <json-c/json.h>
 #define RED "\x1B[31m"
 #define GRN "\x1B[32m"
 #define YEL "\x1B[33m"
@@ -23,7 +22,8 @@ int pam_get_item(void *p, int i, const void **pwd) { return 0; }
 #define WHT "\x1B[37m"
 #define RESET "\x1B[0m"
 
-#define password_folder "/usr/local/src/mirte/mirte-install-scripts/config/pam/"
-#define filename password_folder "users.json"
+#define wifi_password_folder "/home/mirte/"
+#define wifi_filename wifi_password_folder ".wifi_pwd"
+#define mirte_username "mirte"
 void savePassword(char *, char *);
 int checkDirectory();
