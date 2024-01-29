@@ -17,13 +17,13 @@ source /home/mirte/jupyter/bin/activate
 # install jupyros
 sudo apt install -y libjpeg-dev zlib1g-dev
 pip3 install wheel
-pip3 install markupsafe==2.0.1 pyzmq==24 zipp==3.1.0 \
-	ipython==8.7.0 ipykernel==6.17.1 ipywidgets==7.7.2 \
+pip3 install markupsafe==2.0.1 pyzmq==24 zipp==3.1.0
+pip3 install ipython==8.7.0 ipykernel==6.17.1 ipywidgets==7.7.2 \
 	jupyter-client==7.4.8 jupyter-core==5.1.0 \
 	nbclient==0.7.2 nbconvert==7.2.6 nbformat==5.7.0 \
-	qtconsole==5.4.0 traitlets==5.6.0 \
-	notebook==6.5.2 bqplot==0.12.18 pyyaml \
-	jupyros==0.7.0
+	qtconsole==5.4.0 traitlets==5.6.0
+pip3 install notebook==6.5.2 bqplot==0.12.18 pyyaml
+pip3 install jupyros==0.7.0
 jupyter nbextension enable --py --sys-prefix jupyros
 deactivate
 sudo chown -R mirte:mirte /home/mirte/jupyter
