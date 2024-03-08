@@ -20,8 +20,8 @@ sudo update-locale LC_ALL=en_US.UTF-8 LANGUAGE=en_US.UTF-8
 # Install vcstool
 cp repos.yaml $MIRTE_SRC_DIR
 cp download_repos.sh $MIRTE_SRC_DIR || true
-cd $MIRTE_SRC_DIR || exit 1
-./download_repos.sh
+# cd $MIRTE_SRC_DIR || exit 1
+# ./download_repos.sh
 
 # Install dependecnies to be able to run python3.8
 sudo apt install -y python3.8 python3-pip python3-setuptools
@@ -99,6 +99,10 @@ cd $MIRTE_SRC_DIR/mirte-install-scripts || exit 1
 # install audio support to use with mirte-pioneer pcb and orange pi zero 2
 sudo apt install pulseaudio libasound2-dev libespeak1 -y
 pip3 install simpleaudio pyttsx3
+
+# add MIRTE_SRC_DIR=/usr/local/src/mirte to .bashrc and .zshrc
+grep -qxF "export MIRTE_SRC_DIR=/usr/local/src/mirte" /home/mirte/.bashrc || echo "export MIRTE_SRC_DIR=/usr/local/src/mirte" >>/home/mirte/.bashrc
+grep -qxF "export MIRTE_SRC_DIR=/usr/local/src/mirte" /home/mirte/.zshrc || echo "export MIRTE_SRC_DIR=/usr/local/src/mirte" >>/home/mirte/.zshrc
 
 # Install overlayfs and make sd card read only (software)
 sudo apt install -y overlayroot

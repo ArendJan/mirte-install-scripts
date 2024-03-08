@@ -1,0 +1,39 @@
+
+name: Install Check
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    install_check:
+        runs-on: ubuntu-latest
+        container: ubuntu:focal
+
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+        - name: install packages
+          run: apt-get update && apt-get install -y sudo lsb-release wget
+        - name: add required files
+          run: |
+            mkdir -p /usr/local/src/mirte/mirte-install-scripts
+            cp ./repos.yaml /usr/local/src/mirte/repos.yaml
+            cp -r ./* /usr/local/src/mirte/mirte-install-scripts/
+            cp ./settings.sh /usr/local/src/mirte/settings.sh
+            touch /usr/bin/systemctl
+            chmod +x /usr/bin/systemctl
+            sudo systemctl reload asef
+            
+        - name: Run mirte-install
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            export TZ=Etc/UTC
+            export type=mirte_ubuntu
+            apt install tzdata
+            TZ=Etc/UTC type=mirte_ubuntu DEBIAN_FRONTEND=noninteractive bash ./mirte_main_install.sh
+            
