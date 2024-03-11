@@ -23,7 +23,7 @@ jobs:
             touch /usr/bin/systemctl
             chmod +x /usr/bin/systemctl
             sudo systemctl reload asef
-            
+            mkdir -p /etc/udev/rules.d
         - name: Run mirte-install
           run: |
             export DEBIAN_FRONTEND=noninteractive
