@@ -20,7 +20,7 @@ jobs:
             cp ./repos.yaml /usr/local/src/mirte/repos.yaml
             cp -r ./* /usr/local/src/mirte/mirte-install-scripts/
             cp ./settings.sh /usr/local/src/mirte/settings.sh
-            sudo rm ${which service}
+            sudo rm $(which service)
             touch /usr/bin/service
             chmod +x /usr/bin/service
             touch /usr/bin/systemctl
