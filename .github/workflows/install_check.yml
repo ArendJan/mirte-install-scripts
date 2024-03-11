@@ -13,7 +13,7 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v4
         - name: install packages
-          run: apt-get update && apt-get install -y sudo lsb-release wget
+          run: apt-get update && apt-get install -y sudo lsb-release wget systemd
         - name: add required files
           run: |
             mkdir -p /usr/local/src/mirte/mirte-install-scripts
