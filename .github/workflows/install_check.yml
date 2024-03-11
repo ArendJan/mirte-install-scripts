@@ -21,12 +21,21 @@ jobs:
             cp -r ./* /usr/local/src/mirte/mirte-install-scripts/
             cp ./settings.sh /usr/local/src/mirte/settings.sh
             sudo rm $(which service)
+            sudo rm $(which systemctl)
             touch /usr/bin/service
             chmod +x /usr/bin/service
             touch /usr/bin/systemctl
             chmod +x /usr/bin/systemctl
             sudo systemctl reload asef
-            
+            sudo systemctl daemon-reload
+            systemctl daemon-reload
+            sudo useradd -m -s /bin/bash myuser
+            echo "myuser ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
+            echo "useradd"
+            sudo usermod -aG sudo myuser
+            echo "done"
+            sudo -u myuser /bin/bash -c "sudo systemctl daemon-reload"
+            echo "done2"
             mkdir -p /etc/udev/rules.d
             sudo service udev reload
         - name: Run mirte-install
