@@ -20,10 +20,13 @@ jobs:
             cp ./repos.yaml /usr/local/src/mirte/repos.yaml
             cp -r ./* /usr/local/src/mirte/mirte-install-scripts/
             cp ./settings.sh /usr/local/src/mirte/settings.sh
+            touch /usr/bin/service
+            chmod +x /usr/bin/service
             touch /usr/bin/systemctl
             chmod +x /usr/bin/systemctl
             sudo systemctl reload asef
             mkdir -p /etc/udev/rules.d
+            sudo service udev reload
         - name: Run mirte-install
           run: |
             export DEBIAN_FRONTEND=noninteractive
