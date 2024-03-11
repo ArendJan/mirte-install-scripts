@@ -9,7 +9,7 @@ Acquire::ForceIPv4 "true";
 EOF
 
 # Update
-sudo apt update
+sudo apt update || true
 
 # Install locales
 sudo apt install -y locales

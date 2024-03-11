@@ -3,7 +3,7 @@ set -xe
 MIRTE_SRC_DIR=/usr/local/src/mirte
 
 # Update
-sudo apt update
+sudo apt update || true
 
 # Install nodeenv
 sudo apt install -y python3-pip python3-setuptools python3-wheel

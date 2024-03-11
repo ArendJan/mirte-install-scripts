@@ -11,12 +11,12 @@ wget https://apt.kitware.com/kitware-archive.sh
 chmod +x kitware-archive.sh
 sudo ./kitware-archive.sh
 rm kitware-archive.sh
-sudo apt update
+sudo apt update || true
 sudo apt install cmake -y
 # Install ROS Noetic
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
-sudo apt update
+sudo apt update || true
 sudo apt install -y ros-noetic-ros-base python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential python3-catkin-tools python3-osrf-pycommon
 grep -qxF "source /opt/ros/noetic/setup.bash" /home/mirte/.bashrc || echo "source /opt/ros/noetic/setup.bash" >>/home/mirte/.bashrc
 grep -qxF "source /opt/ros/noetic/setup.zsh" /home/mirte/.zshrc || echo "source /opt/ros/noetic/setup.zsh" >>/home/mirte/.zshrc
@@ -39,12 +39,6 @@ mkdir -p /home/mirte/mirte_ws/src
 cd /home/mirte/mirte_ws/src || exit 1
 ln -s $MIRTE_SRC_DIR/mirte-ros-packages .
 cd ..
-rosdep install -y --from-paths src/ --ignore-src --rosdistro noetic
-catkin build
-grep -qxF "source /home/mirte/mirte_ws/devel/setup.bash" /home/mirte/.bashrc || echo "source /home/mirte/mirte_ws/devel/setup.bash" >>/home/mirte/.bashrc
-grep -qxF "source /home/mirte/mirte_ws/devel/setup.zsh" /home/mirte/.zshrc || echo "source /home/mirte/mirte_ws/devel/setup.zsh" >>/home/mirte/.zshrc
-
-source /home/mirte/mirte_ws/devel/setup.bash
 
 # install lidar and depth camera
 cd /home/mirte/mirte_ws/src || exit 1
@@ -72,6 +66,13 @@ roscd astra_camera
 sudo udevadm control --reload && sudo udevadm trigger
 roscd rplidar_ros
 ./scripts/create_udev_rules.sh
+
+rosdep install -y --from-paths src/ --ignore-src --rosdistro noetic
+catkin build
+grep -qxF "source /home/mirte/mirte_ws/devel/setup.bash" /home/mirte/.bashrc || echo "source /home/mirte/mirte_ws/devel/setup.bash" >>/home/mirte/.bashrc
+grep -qxF "source /home/mirte/mirte_ws/devel/setup.zsh" /home/mirte/.zshrc || echo "source /home/mirte/mirte_ws/devel/setup.zsh" >>/home/mirte/.zshrc
+
+source /home/mirte/mirte_ws/devel/setup.bash
 
 # install missing python dependencies rosbridge
 #sudo apt install -y libffi-dev libjpeg-dev zlib1g-dev
