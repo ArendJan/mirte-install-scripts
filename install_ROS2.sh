@@ -61,8 +61,8 @@ sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-ros.service /lib/
 
 sudo systemctl daemon-reload
 sudo systemctl stop mirte-ros || /bin/true
-sudo systemctl start mirte-ros
-sudo systemctl enable mirte-ros
+#sudo systemctl start mirte-ros
+#sudo systemctl enable mirte-ros
 
 sudo usermod -a -G video mirte
 sudo adduser mirte dialout
