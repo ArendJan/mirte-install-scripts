@@ -1,0 +1,11 @@
+[Unit]
+Description=Mirte USB ethernet
+After=NetworkManager.service
+After=network-online.target
+
+[Service]
+KillMode=process
+ExecStart=/bin/bash -c "/usr/local/src/mirte/mirte-install-scripts/usb_ethernet.sh"
+
+[Install]
+WantedBy=multi-user.target

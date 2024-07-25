@@ -29,7 +29,13 @@ deactivate
 sudo chown -R mirte:mirte /home/mirte/jupyter
 
 # TEMP: download examples
-git clone https://github.com/RoboStack/jupyter-ros.git
+if [ "$UPDATE" ]; then
+	cd /home/mirte/jupyter-ros || exit
+	git pull
+else
+	git clone https://github.com/RoboStack/jupyter-ros.git
+fi
+
 sudo chown -R mirte:mirte /home/mirte/jupyter-ros
 
 # Add systemd service to start jupyter
