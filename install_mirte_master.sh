@@ -39,7 +39,7 @@ pip install gpiod==1.5.4 # python3.8 version
 
 # chatgpt node stuff for @chris-pek
 pip install gtts playsound openai==0.28.0 sounddevice scipy SpeechRecognition soundfile transformers datasets pyyaml pydub Elevenlabs || true # some strange package versions
-pip install numpy==1.23.1 # python3.8 fix
+pip install numpy==1.23.1                                                                                                                     # python3.8 fix
 
 mkdir ~/uboot_fix/
 cd ~/uboot_fix/

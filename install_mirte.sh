@@ -67,9 +67,9 @@ if $INSTALL_ROS; then
 		cd $MIRTE_SRC_DIR/mirte-install-scripts || exit 1
 		. ./install_ROS.sh
 		echo "done ROS"
-	} 2>&1 | sed -u 's/^/ROS::: /' & 
-	
-	{	# Install telemetrix
+	} 2>&1 | sed -u 's/^/ROS::: /' &
+
+	{ # Install telemetrix
 		cd $MIRTE_SRC_DIR/mirte-telemetrix-aio || exit 1
 		pip3 install .
 		cd $MIRTE_SRC_DIR/mirte-tmx-pico-aio || exit 1
@@ -172,8 +172,6 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	cd $MIRTE_SRC_DIR/mirte-install-scripts || exit 1
 	./install_mirte_master.sh
 fi
-
-
 
 # install audio support to use with mirte-pioneer pcb and orange pi zero 2
 sudo apt install pulseaudio libasound2-dev libespeak1 -y

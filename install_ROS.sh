@@ -10,7 +10,7 @@ MIRTE_SRC_DIR=/usr/local/src/mirte
 wget https://apt.kitware.com/kitware-archive.sh
 chmod +x kitware-archive.sh
 sudo ./kitware-archive.sh
-rm kitware-archive.sh 
+rm kitware-archive.sh
 until sudo apt update; do
 	echo "retrying apt update in 1s"
 	sleep 1
