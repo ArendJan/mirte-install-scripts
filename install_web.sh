@@ -10,20 +10,20 @@ sudo apt install -y python3-pip python3-setuptools python3-wheel
 sudo -H pip install nodeenv
 
 # Install nodeenv
-nodeenv --node=16.2.0 $MIRTE_SRC_DIR/mirte-web-interface/node_env
+sudo nodeenv --node=16.2.0 $MIRTE_SRC_DIR/mirte-web-interface/node_env
 
 # Install web interface
 . $MIRTE_SRC_DIR/mirte-web-interface/node_env/bin/activate
+if $BUILD_WEB; then
+	# Install frontend
+	cd $MIRTE_SRC_DIR/mirte-web-interface/vue-frontend || exit 1
+	npm install .
+	npm run build
 
-# Install frontend
-cd $MIRTE_SRC_DIR/mirte-web-interface/vue-frontend || exit 1
-npm install .
-npm run build
-
-# Install backend
-cd $MIRTE_SRC_DIR/mirte-web-interface/nodejs-backend || exit 1
-npm install .
-
+	# Install backend
+	cd $MIRTE_SRC_DIR/mirte-web-interface/nodejs-backend || exit 1
+	npm install .
+fi
 # Install wetty
 #cd $MIRTE_SRC_DIR/mirte-web-interface
 #npm -g install wetty
