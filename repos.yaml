@@ -10,7 +10,7 @@ repositories:
   mirte-install-scripts:
     type: git
     url: https://github.com/arendjan/mirte-install-scripts.git
-    version: mirte-master2
+    version: mirte-master-ros2
   mirte-telemetrix-aio:
     type: git
     url: https://github.com/mirte-robot/telemetrix-aio.git
@@ -22,7 +22,7 @@ repositories:
   mirte-ros-packages:
     type: git
     url: https://github.com/arendjan/mirte-ros-packages.git
-    version: mirte-master
+    version: ros2
   mirte-oled-images:
     type: git
     url: https://github.com/mirte-robot/mirte-oled-images.git
