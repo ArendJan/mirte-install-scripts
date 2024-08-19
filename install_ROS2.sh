@@ -49,6 +49,8 @@ cd ..
 rosdep install -y --from-paths src/ --ignore-src --rosdistro humble
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
 grep -qxF "source /home/mirte/mirte_ws/install/setup.bash" /home/mirte/.bashrc || echo "source /home/mirte/mirte_ws/install/setup.bash" >> /home/mirte/.bashrc
+grep -qxF "source /home/mirte/mirte_ws/install/setup.zsh" /home/mirte/.zshrc || echo "source /home/mirte/mirte_ws/install/setup.zsh" >> /home/mirte/.zshrc
+
 source /home/mirte/mirte_ws/install/setup.bash
 
 # install missing python dependencies rosbridge
@@ -110,4 +112,13 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	sudo udevadm control --reload && sudo udevadm trigger
 	cd ../../rplidar_ros
 	./scripts/create_udev_rules.sh
+    # zsh does not work nicely with ros2 autocomplete, so we need to add a function to fix it.
+    # ROS 2 Foxy should have this fixed, but we are using ROS 2 Humble.
+    cat <<EOF >> /home/mirte/.zshrc
+sr () { # macro to source the workspace and enable autocompletion. sr stands for source ros, no other command should use this abbreviation.
+    . ~/mirte_ws/install/setup.zsh
+    eval "$(register-python-argcomplete3 ros2)"
+    eval "$(register-python-argcomplete3 colcon)"
+}
+EOF
 fi
