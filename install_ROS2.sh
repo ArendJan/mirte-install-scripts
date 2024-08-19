@@ -73,6 +73,16 @@ sudo apt install -y python3-bitstring libfreetype6-dev libjpeg-dev zlib1g-dev fo
 sudo pip3 install adafruit-circuitpython-busdevice==5.1.1 adafruit-circuitpython-framebuf==1.4.9 adafruit-circuitpython-typing==1.7.0 Adafruit-PlatformDetect==3.22.1
 sudo pip3 install pillow adafruit-circuitpython-ssd1306==2.12.1
 
+# Some nice extra packages: clean can clean workspaces and packages. No need to do it by hand. lint can check for errors in the cmake/package code.
+sudo pip3 install colcon-clean colcon-lint 
+
+# Add colcon top level workspace, this makes it possible to run colcon build from any folder, it will find the workspace and build it. Otherwise it will create a new workspace in the subdirectory.
+cd /tmp
+git clone https://github.com/rhaschke/colcon-top-level-workspace
+cd colcon-top-level-workspace
+pip install .
+cd ..
+rm -rf colcon-top-level-workspace
 if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	# install lidar and depth camera
 	cd /home/mirte/mirte_ws/src || exit 1
