@@ -25,9 +25,10 @@ cd $MIRTE_SRC_DIR || exit 1
 
 # Install dependecnies to be able to run python3.8
 sudo apt install -y python3.8 python3-pip python3-setuptools
-pip3 install setuptools==70.0.0
+
 # Fix for https://github.com/pypa/setuptools/issues/4478, only in python 3.8
-# pip3 install 'packaging>=24' 'ordered-set>=3.1.1' 'more_itertools>=8.8' 'jaraco.text>=3.7' 'importlib_resources>=5.10.2' 'importlib_metadata>=6' 'tomli>=2.0.1' 'wheel>=0.43.0' 'platformdirs>=2.6.2'
+pip3 install setuptools==70.0.0
+
 # Set piwheels as pip repo
 sudo bash -c "echo '[global]' > /etc/pip.conf"
 sudo bash -c "echo 'extra-index-url=https://www.piwheels.org/simple' >> /etc/pip.conf"
