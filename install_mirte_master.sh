@@ -54,3 +54,7 @@ fi
 
 cd ~/mirte_ws/src
 git clone --recurse-submodules https://github.com/arendjan/mirte-telemetrix-cpp.git 
+cd ~/mirte_ws
+source /opt/ros/humble/setup.bash
+rosdep install -y --from-paths src/ --ignore-src --rosdistro humble
+colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
