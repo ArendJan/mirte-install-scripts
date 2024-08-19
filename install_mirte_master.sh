@@ -51,3 +51,6 @@ if [[ ${type:=""} == "mirte_orangepi3b" ]]; then
 	cd ../
 	rm -rf uboot_fix/
 fi
+
+cd ~/mirte_ws/src
+git clone --recurse-submodules https://github.com/arendjan/mirte-telemetrix-cpp.git 
