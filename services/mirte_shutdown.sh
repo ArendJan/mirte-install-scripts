@@ -8,7 +8,8 @@ if ! systemctl list-jobs | grep -q -E 'shutdown.target.*start'; then
 fi
 
 touch /home/mirte/.shutdown
-source /home/mirte/mirte_ws/devel/setup.bash
+source /home/mirte/mirte_ws/install/setup.bash
 # TODO: does not work if ros is not running
-rosservice call /mirte/set_middle_image "{ type: 'text', value: 'Shutting down...'}"
+
+ros2 service call /mirte/set_middle_image "{ type: 'text', value: 'Shutting down...'}"
 sleep 2

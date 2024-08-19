@@ -1,6 +1,7 @@
 #!/bin/bash
 set -x
-. /opt/ros/noetic/setup.bash
+. /opt/ros/humble/setup.bash
+. /home/mirte/mirte_ws/install/setup.bash
 SECONDS=0
 WARN_LVL=0
 while true; do
@@ -8,7 +9,7 @@ while true; do
 
 	# echo "topics"
 	percentage=$(
-		(rostopic echo /mirte/power/power_watcher -n2 | grep percentage | tail -1) &
+		(ros2 topic echo /mirte/power/power_watcher --once | grep percentage | tail -1) &
 		pid=$!
 		(sleep 5 && kill -9 $pid) 2>/dev/null &
 		watcher=$!
