@@ -72,3 +72,32 @@ python3 -m pip install telemetrix-rpi-pico
 sudo apt install -y python3-bitstring libfreetype6-dev libjpeg-dev zlib1g-dev fonts-dejavu
 sudo pip3 install adafruit-circuitpython-busdevice==5.1.1 adafruit-circuitpython-framebuf==1.4.9 adafruit-circuitpython-typing==1.7.0 Adafruit-PlatformDetect==3.22.1
 sudo pip3 install pillow adafruit-circuitpython-ssd1306==2.12.1
+
+if [[ $MIRTE_TYPE == "mirte-master" ]]; then
+	# install lidar and depth camera
+	cd /home/mirte/mirte_ws/src || exit 1
+	git clone https://github.com/Slamtec/rplidar_ros.git -b ros2
+	git clone https://github.com/rafal-gorecki/ros2_astra_camera.git -b master # compressed images image transport fixes, fork of orbbec/...
+	git clone https://github.com/clearpathrobotics/clearpath_mecanum_drive_controller
+	cd ../../
+	mkdir temp
+	cd temp || exit 1
+	sudo apt install -y libudev-dev
+	git clone https://github.com/libuvc/libuvc.git
+	cd libuvc
+	mkdir build && cd build
+	cmake .. && make -j4
+	sudo make install
+	sudo ldconfig
+	cd ../../../
+	sudo rm -rf temp
+	cd /home/mirte/mirte_ws/ || exit 1
+	rosdep install -y --from-paths src/ --ignore-src --rosdistro humble
+	colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+	source ./install/setup.bash
+	cd  src/ros2_astra_camera/astra_camera
+	./scripts/install.sh
+	sudo udevadm control --reload && sudo udevadm trigger
+	cd ../../rplidar_ros
+	./scripts/create_udev_rules.sh
+fi
