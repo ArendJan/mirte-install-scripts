@@ -58,13 +58,18 @@ source /home/mirte/mirte_ws/install/setup.bash
 #sudo pip3 install twisted pyOpenSSL autobahn tornado pymongo
 
 # Add systemd service to start ROS nodes
-sudo rm /lib/systemd/system/mirte-ros.service
-sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-ros.service /lib/systemd/system/
+ROS_SERVICE_NAME=mirte-ros
+if [[ $MIRTE_TYPE == "mirte-master" ]]; then # master version should start a different launch file
+	ROS_SERVICE_NAME=mirte-master-ros
+fi
+sudo rm /lib/systemd/system/$ROS_SERVICE_NAME.service || true
+sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/$ROS_SERVICE_NAME.service /lib/systemd/system/
 
 sudo systemctl daemon-reload
-sudo systemctl stop mirte-ros || /bin/true
-#sudo systemctl start mirte-ros
-#sudo systemctl enable mirte-ros
+sudo systemctl stop $ROS_SERVICE_NAME || /bin/true
+sudo systemctl start $ROS_SERVICE_NAME
+sudo systemctl enable $ROS_SERVICE_NAME
+
 
 sudo usermod -a -G video mirte
 sudo adduser mirte dialout
@@ -116,9 +121,17 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
     # ROS 2 Foxy should have this fixed, but we are using ROS 2 Humble.
     cat <<EOF >> /home/mirte/.zshrc
 sr () { # macro to source the workspace and enable autocompletion. sr stands for source ros, no other command should use this abbreviation.
+    . /opt/ros/humble/setup.zsh
     . ~/mirte_ws/install/setup.zsh
     eval "$(register-python-argcomplete3 ros2)"
     eval "$(register-python-argcomplete3 colcon)"
 }
+cb () {
+    colcon build --symlink-install 
+}
+cbr () {
+    colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+}
+sr
 EOF
 fi

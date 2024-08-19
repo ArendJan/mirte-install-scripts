@@ -12,6 +12,7 @@ EOF
 
 # Update
 sudo apt update || true
+sudo bash -c 'echo "mirte ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers' # allow mirte to use sudo without password, needed for auto-shutdown on battery
 
 # Install locales
 sudo apt install -y locales
