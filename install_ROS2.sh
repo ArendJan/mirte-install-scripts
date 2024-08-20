@@ -12,12 +12,12 @@ sudo apt install software-properties-common -y
 sudo add-apt-repository universe -y
 sudo apt update && sudo apt install curl -y
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list >/dev/null
 sudo apt update
 sudo apt install -y ros-humble-ros-base
 sudo apt install -y ros-humble-xacro
 sudo apt install -y ros-dev-tools
-grep -qxF "source /opt/ros/humble/setup.bash" /home/mirte/.bashrc || echo "source /opt/ros/humble/setup.bash" >> /home/mirte/.bashrc
+grep -qxF "source /opt/ros/humble/setup.bash" /home/mirte/.bashrc || echo "source /opt/ros/humble/setup.bash" >>/home/mirte/.bashrc
 source /opt/ros/humble/setup.bash
 sudo rosdep init
 rosdep update
@@ -48,8 +48,8 @@ git clone https://github.com/RobotWebTools/web_video_server.git -b ros2
 cd ..
 rosdep install -y --from-paths src/ --ignore-src --rosdistro humble
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
-grep -qxF "source /home/mirte/mirte_ws/install/setup.bash" /home/mirte/.bashrc || echo "source /home/mirte/mirte_ws/install/setup.bash" >> /home/mirte/.bashrc
-grep -qxF "source /home/mirte/mirte_ws/install/setup.zsh" /home/mirte/.zshrc || echo "source /home/mirte/mirte_ws/install/setup.zsh" >> /home/mirte/.zshrc
+grep -qxF "source /home/mirte/mirte_ws/install/setup.bash" /home/mirte/.bashrc || echo "source /home/mirte/mirte_ws/install/setup.bash" >>/home/mirte/.bashrc
+grep -qxF "source /home/mirte/mirte_ws/install/setup.zsh" /home/mirte/.zshrc || echo "source /home/mirte/mirte_ws/install/setup.zsh" >>/home/mirte/.zshrc
 
 source /home/mirte/mirte_ws/install/setup.bash
 
@@ -70,7 +70,6 @@ sudo systemctl stop $ROS_SERVICE_NAME || /bin/true
 sudo systemctl start $ROS_SERVICE_NAME
 sudo systemctl enable $ROS_SERVICE_NAME
 
-
 sudo usermod -a -G video mirte
 sudo adduser mirte dialout
 python3 -m pip install telemetrix-rpi-pico
@@ -81,7 +80,7 @@ sudo pip3 install adafruit-circuitpython-busdevice==5.1.1 adafruit-circuitpython
 sudo pip3 install pillow adafruit-circuitpython-ssd1306==2.12.1
 
 # Some nice extra packages: clean can clean workspaces and packages. No need to do it by hand. lint can check for errors in the cmake/package code.
-sudo pip3 install colcon-clean colcon-lint 
+sudo pip3 install colcon-clean colcon-lint
 
 # Add colcon top level workspace, this makes it possible to run colcon build from any folder, it will find the workspace and build it. Otherwise it will create a new workspace in the subdirectory.
 cd /tmp
@@ -112,14 +111,14 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	rosdep install -y --from-paths src/ --ignore-src --rosdistro humble
 	colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
 	source ./install/setup.bash
-	cd  src/ros2_astra_camera/astra_camera
+	cd src/ros2_astra_camera/astra_camera
 	./scripts/install.sh
 	sudo udevadm control --reload && sudo udevadm trigger
 	cd ../../rplidar_ros
 	./scripts/create_udev_rules.sh
-    # zsh does not work nicely with ros2 autocomplete, so we need to add a function to fix it.
-    # ROS 2 Foxy should have this fixed, but we are using ROS 2 Humble.
-    cat <<EOF >> /home/mirte/.zshrc
+	# zsh does not work nicely with ros2 autocomplete, so we need to add a function to fix it.
+	# ROS 2 Foxy should have this fixed, but we are using ROS 2 Humble.
+	cat <<EOF >>/home/mirte/.zshrc
 sr () { # macro to source the workspace and enable autocompletion. sr stands for source ros, no other command should use this abbreviation.
     . /opt/ros/humble/setup.zsh
     . ~/mirte_ws/install/setup.zsh

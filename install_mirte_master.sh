@@ -39,7 +39,7 @@ pip install gpiod==1.5.4 # python3.8 version
 
 # chatgpt node stuff for @chris-pek
 pip install gtts playsound openai==0.28.0 sounddevice scipy SpeechRecognition soundfile transformers datasets pyyaml pydub Elevenlabs || true # some strange package versions
-pip install numpy==1.23.1 # python3.8 fix
+pip install numpy==1.23.1                                                                                                                     # python3.8 fix
 
 mkdir ~/uboot_fix/
 cd ~/uboot_fix/
@@ -53,7 +53,7 @@ if [[ ${type:=""} == "mirte_orangepi3b" ]]; then
 fi
 
 cd ~/mirte_ws/src
-git clone --recurse-submodules https://github.com/arendjan/mirte-telemetrix-cpp.git 
+git clone --recurse-submodules https://github.com/arendjan/mirte-telemetrix-cpp.git
 cd ~/mirte_ws
 source /opt/ros/humble/setup.bash
 rosdep install -y --from-paths src/ --ignore-src --rosdistro humble

@@ -58,8 +58,8 @@ pip3 install .
 #pip3 install .
 
 # Install Mirte Interface
-#cd $MIRTE_SRC_DIR/mirte-install-scripts
-#./install_web.sh
+cd $MIRTE_SRC_DIR/mirte-install-scripts
+./install_web.sh
 
 # Install Jupyter Notebook
 #cd $MIRTE_SRC_DIR/mirte-install-scripts
