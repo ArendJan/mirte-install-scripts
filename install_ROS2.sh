@@ -128,10 +128,22 @@ sr () { # macro to source the workspace and enable autocompletion. sr stands for
     eval "$(register-python-argcomplete3 colcon)"
 }
 cb () {
-    colcon build --symlink-install 
+    pkg=$1
+    # if package not empty
+    if [ -n "$pkg" ]; then
+        colcon build --symlink-install --packages-up-to $pkg
+    else
+        colcon build --symlink-install 
+    fi
 }
 cbr () {
-    colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+    pkg=$1
+    # if package not empty
+    if [ -n "$pkg" ]; then
+        colcon build --symlink-install --packages-up-to $pkg --cmake-args -DCMAKE_BUILD_TYPE=Release
+    else
+        colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+    fi
 }
 sr
 EOF
