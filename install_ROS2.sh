@@ -124,23 +124,23 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 sr () { # macro to source the workspace and enable autocompletion. sr stands for source ros, no other command should use this abbreviation.
     . /opt/ros/humble/setup.zsh
     . ~/mirte_ws/install/setup.zsh
-    eval "$(register-python-argcomplete3 ros2)"
-    eval "$(register-python-argcomplete3 colcon)"
+    eval "\$(register-python-argcomplete3 ros2)"
+    eval "\$(register-python-argcomplete3 colcon)"
 }
 cb () {
-    pkg=$1
+    pkg=\$1
     # if package not empty
-    if [ -n "$pkg" ]; then
-        colcon build --symlink-install --packages-up-to $pkg
+    if [ -n "\$pkg" ]; then
+        colcon build --symlink-install --packages-up-to \$pkg
     else
         colcon build --symlink-install 
     fi
 }
 cbr () {
-    pkg=$1
+    pkg=\$1
     # if package not empty
-    if [ -n "$pkg" ]; then
-        colcon build --symlink-install --packages-up-to $pkg --cmake-args -DCMAKE_BUILD_TYPE=Release
+    if [ -n "\$pkg" ]; then
+        colcon build --symlink-install --packages-up-to \$pkg --cmake-args -DCMAKE_BUILD_TYPE=Release
     else
         colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
     fi
