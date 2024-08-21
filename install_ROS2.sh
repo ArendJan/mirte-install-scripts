@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -xe
 # IMPORTANT:
 # Do not upgrade apt-get since it will break the image. libc-bin will for some
 # reason break and not be able to install new stuff on the image.
