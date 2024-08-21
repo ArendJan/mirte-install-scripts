@@ -112,10 +112,12 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
 	source ./install/setup.bash
 	cd src/ros2_astra_camera/astra_camera
-	./scripts/install.sh
+	chmod +x ./scripts/install.sh || true
+	./scripts/install.sh || true
 	sudo udevadm control --reload && sudo udevadm trigger
 	cd ../../rplidar_ros
-	./scripts/create_udev_rules.sh
+	chmod +x ./scripts/create_udev_rules.sh || true
+	./scripts/create_udev_rules.sh || true
 	# zsh does not work nicely with ros2 autocomplete, so we need to add a function to fix it.
 	# ROS 2 Foxy should have this fixed, but we are using ROS 2 Humble.
 	cat <<EOF >>/home/mirte/.zshrc
