@@ -31,6 +31,10 @@ while true; do
 		SECONDS=0 # update time since last ok
 		WARN_LVL=0
 	fi
+	if [ $SECONDS -gt 1000 ]; then
+		# time jump. seconds is not reliable, it jumps when the date is updated to real time when it connects to internet.
+		SECONDS=0
+	fi
 	if [ $SECONDS -gt 300 ] && [ $WARN_LVL -eq 0 ]; then
 		wall "No ROS for longer than 5min"
 		WARN_LVL=1
