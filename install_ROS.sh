@@ -28,7 +28,7 @@ sudo apt install -y ros-noetic-ros-base python3-rosdep python3-rosinstall python
 grep -qxF "source /opt/ros/noetic/setup.bash" /home/mirte/.bashrc || echo "source /opt/ros/noetic/setup.bash" >>/home/mirte/.bashrc
 grep -qxF "source /opt/ros/noetic/setup.zsh" /home/mirte/.zshrc || echo "source /opt/ros/noetic/setup.zsh" >>/home/mirte/.zshrc
 source /opt/ros/noetic/setup.bash
-sudo rosdep init
+sudo rosdep init || true # init will fail if it is already initialized
 rosdep update
 
 # Install computer vision libraries
@@ -56,7 +56,7 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	cd ../../
 	mkdir temp
 	cd temp || exit 1
-	sudo apt install -y libudev-dev
+	sudo apt install -y libudev-dev libusb-1.0-0-dev
 	git clone https://github.com/libuvc/libuvc.git
 	cd libuvc
 	mkdir build && cd build

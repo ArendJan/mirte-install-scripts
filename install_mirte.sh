@@ -190,7 +190,7 @@ sudo du -sh /var/cache/apt/archives
 sudo apt clean
 
 echo "Waiting"
-time wait_all # wait on all the backgrounded stuff
+wait_all # wait on all the backgrounded stuff
 echo "Done installing"
 # cd /home/mirte/
 date >install_date.txt
