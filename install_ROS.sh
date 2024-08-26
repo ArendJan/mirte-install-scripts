@@ -56,7 +56,7 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	cd ../../
 	mkdir temp
 	cd temp || exit 1
-	sudo apt install -y libudev-dev libusb-1.0-0-dev libjpeg9
+	sudo apt install -y libudev-dev libusb-1.0-0-dev libjpeg-dev
 	sudo ldconfig
 	git clone https://github.com/libuvc/libuvc.git
 	cd libuvc
