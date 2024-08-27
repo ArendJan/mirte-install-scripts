@@ -3,7 +3,7 @@ set -xe
 
 MIRTE_SRC_DIR=/usr/local/src/mirte
 
-if [[ ${type:=""} != "mirte_orangepi3b" ]]; then
+if [[ ${MIRTE_TYPE:=""} != "mirte_orangepi3b" ]]; then
 	# Fix for wrong sound card
 	sudo bash -c 'cat <<EOT >> /etc/asound.conf
 defaults.pcm.card 1
@@ -41,10 +41,11 @@ pip install gpiod==1.5.4 # python3.8 version
 pip install gtts playsound openai==0.28.0 sounddevice scipy SpeechRecognition soundfile transformers datasets pyyaml pydub Elevenlabs || true # some strange package versions
 pip install numpy==1.23.1                                                                                                                     # python3.8 fix
 
-mkdir ~/uboot_fix/
-cd ~/uboot_fix/
 # audio fix uboot for orange pi 3b
-if [[ ${type:=""} == "mirte_orangepi3b" ]]; then
+if [[ ${MIRTE_TYPE:=""} == "mirte_orangepi3b" ]]; then
+
+	mkdir ~/uboot_fix/
+	cd ~/uboot_fix/
 	wget https://mirte.arend-jan.com/files/fixes/uboot/linux-u-boot-orangepi3b-edge_24.2.1_arm64__2023.10-S095b-P0000-H264e-V49ed-B11a8-R448a.deb
 	sudo apt install ./linux-u-boot-orangepi3b-edge_24.2.1_arm64__2023.10-S095b-P0000-H264e-V49ed-B11a8-R448a.deb
 	rm linux-u-boot-orangepi3b-edge_24.2.1_arm64__2023.10-S095b-P0000-H264e-V49ed-B11a8-R448a.deb
