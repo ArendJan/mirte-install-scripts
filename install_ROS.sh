@@ -95,12 +95,12 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then # master version should start a dif
 	ROS_SERVICE_NAME=mirte-master-ros
 fi
 sudo rm /lib/systemd/system/$ROS_SERVICE_NAME.service || true
-sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/$ROS_SERVICE_NAME.service /lib/systemd/system/
+sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/$ROS_SERVICE_NAME.service /lib/systemd/system/mirte-ros.service
 
 sudo systemctl daemon-reload
-sudo systemctl stop $ROS_SERVICE_NAME || /bin/true
-sudo systemctl start $ROS_SERVICE_NAME
-sudo systemctl enable $ROS_SERVICE_NAME
+sudo systemctl stop mirte-ros.service || /bin/true
+sudo systemctl start mirte-ros.service
+sudo systemctl enable mirte-ros.service
 
 sudo usermod -a -G video mirte
 
