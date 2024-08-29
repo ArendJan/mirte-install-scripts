@@ -3,7 +3,7 @@ set -xe
 MIRTE_SRC_DIR=/usr/local/src/mirte
 # Make sure there are no conflicting hcdp-servers
 sudo apt install -y dnsmasq-base
-systemctl disable hostapd
+systemctl disable hostapd || true # not on uefi_x86 images
 sed -i 's/#DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf
 # Install netplan (not installed on armbian) and networmanager (not installed by Raspberry)
 sudo apt install -y netplan.io
