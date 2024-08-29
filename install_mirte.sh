@@ -17,8 +17,23 @@ MIRTE_SRC_DIR=/usr/local/src/mirte
 	export INSTALL_PROVISIONING=true
 	export PARALLEL=true
 	export MIRTE_TYPE=default
-	export MIRTE_SBC=unknown
 )
+
+OPI=$(uname -a | grep sunxi)
+OPI2=$(grep "Orange Pi Zero 2" /proc/device-tree/model)
+RPI=$(grep -a "Raspberry" /proc/device-tree/model)
+OPI3b=$(grep "OPi 3B" /proc/device-tree/model)
+
+if [ "$OPI" ]; then
+	export MIRTE_SBC="orangepizero"
+elif [ "$OPI2" ]; then
+	export MIRTE_SBC="orangepizero2"
+elif [ "$OPI3b" ]; then
+	export MIRTE_SBC="orangepi3b"
+elif [ "$RPI" ]; then
+	export MIRTE_SBC="raspberrypi4b"
+fi
+
 wait_all() {
 	while [ "$(jobs -p | wc -l)" -gt 0 ]; do # wait for all backgrounded jobs to finish
 		state=0

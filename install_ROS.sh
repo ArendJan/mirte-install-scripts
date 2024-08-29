@@ -93,7 +93,7 @@ source /home/mirte/mirte_ws/devel/setup.bash
 ROS_SERVICE_NAME=mirte-ros
 if [[ $MIRTE_TYPE == "mirte-master" ]]; then # master version should start a different launch file
 	# ROS_SERVICE_NAME=mirte-master-ros # somehow this doesn't work nicely, so we just duplicate the file for the master.
-	rm $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-ros.service 
+	rm $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-ros.service
 	cp $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-master-ros.service $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-ros.service
 fi
 sudo rm /lib/systemd/system/mirte-ros.service || true
