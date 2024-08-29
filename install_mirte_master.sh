@@ -3,7 +3,7 @@ set -xe
 
 MIRTE_SRC_DIR=/usr/local/src/mirte
 
-if [[ ${MIRTE_TYPE:=""} != "mirte_orangepi3b" ]]; then
+if [[ ${MIRTE_SBC:=""} != "orangepi3b" ]]; then
 	# Fix for wrong sound card
 	sudo bash -c 'cat <<EOT >> /etc/asound.conf
 defaults.pcm.card 1
@@ -42,7 +42,7 @@ pip install gtts playsound openai==0.28.0 sounddevice scipy SpeechRecognition so
 pip install numpy==1.23.1                                                                                                                     # python3.8 fix
 
 # audio fix uboot for orange pi 3b
-if [[ ${MIRTE_TYPE:=""} == "mirte_orangepi3b" ]]; then
+if [[ ${MIRTE_SBC:=""} == "orangepi3b" ]]; then
 
 	mkdir ~/uboot_fix/
 	cd ~/uboot_fix/

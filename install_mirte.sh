@@ -17,6 +17,7 @@ MIRTE_SRC_DIR=/usr/local/src/mirte
 	export INSTALL_PROVISIONING=true
 	export PARALLEL=true
 	export MIRTE_TYPE=default
+	export MIRTE_SBC=unknown
 )
 wait_all() {
 	while [ "$(jobs -p | wc -l)" -gt 0 ]; do # wait for all backgrounded jobs to finish
