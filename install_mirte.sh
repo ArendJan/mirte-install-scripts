@@ -23,16 +23,16 @@ MIRTE_SRC_DIR=/usr/local/src/mirte
 # OPI2=$(grep "Orange Pi Zero 2" /proc/device-tree/model)
 # RPI=$(grep -a "Raspberry" /proc/device-tree/model)
 # OPI3b=$(grep "OPi 3B" /proc/device-tree/model)
-
-if [ "$(uname -a | grep sunxi)" ]; then
-	export MIRTE_SBC="orangepizero"
-elif [ "$(grep "Orange Pi Zero 2" /proc/device-tree/model)" ]; then
-	export MIRTE_SBC="orangepizero2"
-elif [ "$(grep "OPi 3B" /proc/device-tree/model)" ]; then
-	export MIRTE_SBC="orangepi3b"
-elif [ "$(grep -a "Raspberry" /proc/device-tree/model)" ]; then
-	export MIRTE_SBC="raspberrypi4b"
-fi
+export MIRTE_SBC="$(hostname)"
+# if [ "$(uname -a | grep sunxi)" ]; then
+# 	export MIRTE_SBC="orangepizero"
+# elif [ "$(grep "Orange Pi Zero 2" /proc/device-tree/model)" ]; then
+# 	export MIRTE_SBC="orangepizero2"
+# elif [ "$(grep "OPi 3B" /proc/device-tree/model)" ]; then
+	
+# elif [ "$(grep -a "Raspberry" /proc/device-tree/model)" ]; then
+# 	export MIRTE_SBC="raspberrypi4b"
+# fi
 
 wait_all() {
 	while [ "$(jobs -p | wc -l)" -gt 0 ]; do # wait for all backgrounded jobs to finish
@@ -186,7 +186,7 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	echo 'root:$6$iPpuScKGQTiuJk9r$cBXX/s.8UBp0bvrshHRhw/tHcmU3.beHBfCyJgP8Qhjx2CEO5.dyyvKips6loYQocSTgS/qEYxPrOQd/.qVi70:19793:0:99999:7:::' | sudo tee -a /etc/shadow
 	# Install Mirte Master
 	cd $MIRTE_SRC_DIR/mirte-install-scripts || exit 1
-	./install_mirte_master.sh
+	. ./install_mirte_master.sh
 fi
 
 # install audio support to use with mirte-pioneer pcb and orange pi zero 2
