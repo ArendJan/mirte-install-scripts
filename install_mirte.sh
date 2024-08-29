@@ -19,18 +19,18 @@ MIRTE_SRC_DIR=/usr/local/src/mirte
 	export MIRTE_TYPE=default
 )
 
-OPI=$(uname -a | grep sunxi)
-OPI2=$(grep "Orange Pi Zero 2" /proc/device-tree/model)
-RPI=$(grep -a "Raspberry" /proc/device-tree/model)
-OPI3b=$(grep "OPi 3B" /proc/device-tree/model)
+# OPI=
+# OPI2=$(grep "Orange Pi Zero 2" /proc/device-tree/model)
+# RPI=$(grep -a "Raspberry" /proc/device-tree/model)
+# OPI3b=$(grep "OPi 3B" /proc/device-tree/model)
 
-if [ "$OPI" ]; then
+if [ "$(uname -a | grep sunxi)" ]; then
 	export MIRTE_SBC="orangepizero"
-elif [ "$OPI2" ]; then
+elif [ "$(grep "Orange Pi Zero 2" /proc/device-tree/model)" ]; then
 	export MIRTE_SBC="orangepizero2"
-elif [ "$OPI3b" ]; then
+elif [ "$(grep "OPi 3B" /proc/device-tree/model)" ]; then
 	export MIRTE_SBC="orangepi3b"
-elif [ "$RPI" ]; then
+elif [ "$(grep -a "Raspberry" /proc/device-tree/model)" ]; then
 	export MIRTE_SBC="raspberrypi4b"
 fi
 
