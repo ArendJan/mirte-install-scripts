@@ -1,5 +1,6 @@
 #!/bin/bash
 set -xe
+set -o pipefail
 
 MIRTE_SRC_DIR=/usr/local/src/mirte
 
@@ -44,7 +45,6 @@ sudo apt install -y locales python3.8 python3-pip python3-setuptools
 	sudo locale-gen "en_US.UTF-8"
 	sudo update-locale LC_ALL=en_US.UTF-8 LANGUAGE=en_US.UTF-8
 	echo "done locale"
-	exit 1
 } 2>&1 | sed -u 's/^/locales::: /' &
 if ! $PARALLEL; then
 	wait_all
