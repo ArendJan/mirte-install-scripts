@@ -17,7 +17,7 @@ MIRTE_SRC_DIR=/usr/local/src/mirte
 	export PARALLEL=true
 	export MIRTE_TYPE=default
 )
-
+export PARALLEL=true
 wait_all() {
 	while [ "$(jobs -p | wc -l)" -gt 0 ]; do # wait for all backgrounded jobs to finish
 		state=0
@@ -44,6 +44,7 @@ sudo apt install -y locales python3.8 python3-pip python3-setuptools
 	sudo locale-gen "en_US.UTF-8"
 	sudo update-locale LC_ALL=en_US.UTF-8 LANGUAGE=en_US.UTF-8
 	echo "done locale"
+	exit 1
 } 2>&1 | sed -u 's/^/locales::: /' &
 if ! $PARALLEL; then
 	wait_all

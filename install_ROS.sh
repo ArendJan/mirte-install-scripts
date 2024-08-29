@@ -94,7 +94,7 @@ ROS_SERVICE_NAME=mirte-ros
 if [[ $MIRTE_TYPE == "mirte-master" ]]; then # master version should start a different launch file
 	ROS_SERVICE_NAME=mirte-master-ros
 fi
-sudo rm /lib/systemd/system/$ROS_SERVICE_NAME.service || true
+sudo rm /lib/systemd/system/mirte-ros.service || true
 sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/$ROS_SERVICE_NAME.service /lib/systemd/system/mirte-ros.service
 
 sudo systemctl daemon-reload
