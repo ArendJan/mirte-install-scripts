@@ -23,7 +23,8 @@ MIRTE_SRC_DIR=/usr/local/src/mirte
 # OPI2=$(grep "Orange Pi Zero 2" /proc/device-tree/model)
 # RPI=$(grep -a "Raspberry" /proc/device-tree/model)
 # OPI3b=$(grep "OPi 3B" /proc/device-tree/model)
-export MIRTE_SBC="$(cat /etc/hostname)"
+MIRTE_SBC="$(cat /etc/hostname)" || true
+export MIRTE_SBC
 echo $MIRTE_SBC
 
 wait_all() {
