@@ -177,7 +177,9 @@ fi
 	sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-overlay.service /lib/systemd/system/
 	sudo systemctl enable mirte-overlay.service
 } 2>&1 | sed -u 's/^/overlayfs::: /' &
-
+if ! $PARALLEL; then
+	wait_all
+fi
 
 # Install numpy
 pip3 install numpy
