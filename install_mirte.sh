@@ -25,15 +25,6 @@ MIRTE_SRC_DIR=/usr/local/src/mirte
 # OPI3b=$(grep "OPi 3B" /proc/device-tree/model)
 export MIRTE_SBC="$(cat /etc/hostname)"
 echo $MIRTE_SBC
-# if [ "$(uname -a | grep sunxi)" ]; then
-# 	export MIRTE_SBC="orangepizero"
-# elif [ "$(grep "Orange Pi Zero 2" /proc/device-tree/model)" ]; then
-# 	export MIRTE_SBC="orangepizero2"
-# elif [ "$(grep "OPi 3B" /proc/device-tree/model)" ]; then
-	
-# elif [ "$(grep -a "Raspberry" /proc/device-tree/model)" ]; then
-# 	export MIRTE_SBC="raspberrypi4b"
-# fi
 
 wait_all() {
 	while [ "$(jobs -p | wc -l)" -gt 0 ]; do # wait for all backgrounded jobs to finish
