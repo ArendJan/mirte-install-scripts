@@ -169,10 +169,15 @@ if ! $PARALLEL; then
 	wait_all
 fi
 
-# Install overlayfs and make sd card read only (software)
-# sudo apt install -y overlayroot
-# Currently only instaling, not enabled
-#sudo bash -c "echo 'overlayroot=\"tmpfs\"' >> /etc/overlayroot.conf"
+# Install overlayfs (done in sd image tools)
+# Setup expand overlayfs
+{
+	# enable mirte-overlay service
+	sudo rm /lib/systemd/system/mirte-overlay.service || true
+	sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-overlay.service /lib/systemd/system/
+	sudo systemctl enable mirte-overlay.service
+} 2>&1 | sed -u 's/^/overlayfs::: /' &
+
 
 # Install numpy
 pip3 install numpy
