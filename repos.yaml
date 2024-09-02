@@ -9,8 +9,8 @@ repositories:
     version: master
   mirte-install-scripts:
     type: git
-    url: https://github.com/arendjan/mirte-install-scripts.git
-    version: mirte-master-ros2
+    url: https://github.com/SuperJappie08/mirte-install-scripts.git
+    version: mirte-ros2
   mirte-telemetrix-aio:
     type: git
     url: https://github.com/mirte-robot/telemetrix-aio.git
@@ -37,8 +37,8 @@ repositories:
     version: main
   mirte-documentation:
     type: git
-    url: https://github.com/mirte-robot/mirte-documentation.git
-    version: main
+    url: https://github.com/arendjan/mirte-documentation.git
+    version: mirte-master
   mirte-telemetrix4rpipico:
     type: git
     url: https://github.com/arendjan/Telemetrix4RpiPico.git
