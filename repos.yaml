@@ -33,7 +33,7 @@ repositories:
     version: main
   mirte-python:
     type: git
-    url: https://github.com/mirte-robot/mirte-python.git
+    url: https://github.com/SuperJappie08/mirte-python.git
     version: main
   mirte-documentation:
     type: git
@@ -43,3 +43,8 @@ repositories:
     type: git
     url: https://github.com/arendjan/Telemetrix4RpiPico.git
     version: modules2
+  mirte-telemetrix-cpp:
+    type: git
+    url: https://github.com/SuperJappie08/mirte-telemetrix-cpp.git
+    version: main
+    recursive: true

@@ -37,6 +37,7 @@ python3 -m pip install mergedeep
 mkdir -p /home/mirte/mirte_ws/src
 cd /home/mirte/mirte_ws/src
 ln -s $MIRTE_SRC_DIR/mirte-ros-packages .
+ln -s $MIRTE_SRC_DIR/mirte-telemetrix-cpp .
 
 # Install source dependencies for slam
 sudo apt install ros-humble-slam-toolbox -y
