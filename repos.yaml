@@ -21,8 +21,8 @@ repositories:
     version: modules
   mirte-ros-packages:
     type: git
-    url: https://github.com/arendjan/mirte-ros-packages.git
-    version: ros2
+    url: https://github.com/SuperJappie08/mirte-ros-packages.git
+    version: mirte-ros2
   mirte-oled-images:
     type: git
     url: https://github.com/mirte-robot/mirte-oled-images.git
