@@ -9,4 +9,11 @@ sudo apt-get install -y python3-vcstool
 # Download all Mirte repositories
 vcs import --workers 1 <repos.yaml #TODO: get yaml file as parameter
 
+# Initialize the submodule of mirte-telemetrix-cpp
+if [ -d ./mirte-telemetrix-cpp ]; then
+	cd mirte-telemetrix-cpp
+	git submodule update --init --recursive
+	cd -
+fi
+
 # TODO: set remote to gitlab when checkout from local

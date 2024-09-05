@@ -46,5 +46,5 @@ repositories:
   mirte-telemetrix-cpp:
     type: git
     url: https://github.com/SuperJappie08/mirte-telemetrix-cpp.git
-    version: main
+    version: mirte-pioneer
     recursive: true
