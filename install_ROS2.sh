@@ -14,11 +14,24 @@ sudo apt update && sudo apt install curl -y
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list >/dev/null
 sudo apt update
-sudo apt install -y ros-humble-ros-base
-sudo apt install -y ros-humble-xacro
+
+. /etc/os-release
+# select ros2 type based on UBUNTU_CODENAME
+if [[ $UBUNTU_CODENAME == "jammy" ]]; then
+	ROS_NAME=humble
+elif [[ $UBUNTU_CODENAME == "noble" ]]; then
+	ROS_NAME=jazzy
+else
+	echo "Unknown UBUNTU_CODENAME: $UBUNTU_CODENAME"
+	exit 1
+fi
+
+
+sudo apt install -y ros-$ROS_NAME-ros-base
+sudo apt install -y ros-$ROS_NAME-xacro
 sudo apt install -y ros-dev-tools
-grep -qxF "source /opt/ros/humble/setup.bash" /home/mirte/.bashrc || echo "source /opt/ros/humble/setup.bash" >>/home/mirte/.bashrc
-source /opt/ros/humble/setup.bash
+grep -qxF "source /opt/ros/$ROS_NAME/setup.bash" /home/mirte/.bashrc || echo "source /opt/ros/$ROS_NAME/setup.bash" >>/home/mirte/.bashrc
+source /opt/ros/$ROS_NAME/setup.bash
 sudo rosdep init
 rosdep update
 
@@ -39,14 +52,14 @@ cd /home/mirte/mirte_ws/src
 ln -s $MIRTE_SRC_DIR/mirte-ros-packages .
 
 # Install source dependencies for slam
-sudo apt install ros-humble-slam-toolbox -y
+sudo apt install ros-$ROS_NAME-slam-toolbox -y
 sudo apt install libboost-all-dev -y
 git clone https://github.com/AlexKaravaev/ros2_laser_scan_matcher
 git clone https://github.com/AlexKaravaev/csm
 git clone https://github.com/ldrobotSensorTeam/ldlidar_stl_ros2
 git clone https://github.com/RobotWebTools/web_video_server.git -b ros2
 cd ..
-rosdep install -y --from-paths src/ --ignore-src --rosdistro humble
+rosdep install -y --from-paths src/ --ignore-src --rosdistro $ROS_NAME
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
 grep -qxF "source /home/mirte/mirte_ws/install/setup.bash" /home/mirte/.bashrc || echo "source /home/mirte/mirte_ws/install/setup.bash" >>/home/mirte/.bashrc
 grep -qxF "source /home/mirte/mirte_ws/install/setup.zsh" /home/mirte/.zshrc || echo "source /home/mirte/mirte_ws/install/setup.zsh" >>/home/mirte/.zshrc
@@ -108,7 +121,7 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	cd ../../../
 	sudo rm -rf temp
 	cd /home/mirte/mirte_ws/ || exit 1
-	rosdep install -y --from-paths src/ --ignore-src --rosdistro humble
+	rosdep install -y --from-paths src/ --ignore-src --rosdistro $ROS_NAME
 	colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
 	source ./install/setup.bash
 	cd src/ros2_astra_camera/astra_camera
@@ -120,6 +133,7 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	./scripts/create_udev_rules.sh || true
 	# zsh does not work nicely with ros2 autocomplete, so we need to add a function to fix it.
 	# ROS 2 Foxy should have this fixed, but we are using ROS 2 Humble.
+	# TODO: check for ROS2 jazzy
 	cat <<EOF >>/home/mirte/.zshrc
 sr () { # macro to source the workspace and enable autocompletion. sr stands for source ros, no other command should use this abbreviation.
     . /opt/ros/humble/setup.zsh
