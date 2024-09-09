@@ -45,7 +45,8 @@ sudo apt install libboost-all-dev -y
 git clone https://github.com/AlexKaravaev/ros2_laser_scan_matcher
 git clone https://github.com/AlexKaravaev/csm
 git clone https://github.com/ldrobotSensorTeam/ldlidar_stl_ros2
-git clone https://github.com/RobotWebTools/web_video_server.git -b ros2
+# git clone https://github.com/RobotWebTools/web_video_server.git -b ros2
+git clone https://github.com/cellumation/web_video_server.git -b ros2
 cd ..
 rosdep install -y --from-paths src/ --ignore-src --rosdistro humble
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
