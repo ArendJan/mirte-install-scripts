@@ -31,6 +31,8 @@ deactivate_node
 
 # Install strace for linetrace functionality
 sudo apt install -y strace
+# For rpi4 non-armbian version we need to give ptrace the right permissions
+sudo bash -c 'echo "0" > /proc/sys/kernel/yama/ptrace_scope'
 
 # Install nginx (as reverse proxy to all services)
 sudo apt install -y nginx
