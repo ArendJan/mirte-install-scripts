@@ -34,14 +34,14 @@ repositories:
   mirte-python:
     type: git
     url: https://github.com/SuperJappie08/mirte-python.git
-    version: main
+    version: ros2-dev
   mirte-documentation:
     type: git
     url: https://github.com/arendjan/mirte-documentation.git
     version: mirte-master
   mirte-telemetrix4rpipico:
     type: git
-    url: https://github.com/arendjan/Telemetrix4RpiPico.git
+    url: https://github.com/SuperJappie08/Telemetrix4RpiPico.git
     version: modules2
   mirte-telemetrix-cpp:
     type: git
