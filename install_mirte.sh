@@ -54,12 +54,16 @@ pip3 install .
 #./install_arduino.sh
 
 # Install Mirte Python package
-#cd $MIRTE_SRC_DIR/mirte-python
-#pip3 install .
+if [[ "$INSTALL_PYTHON" = true ]]; then
+	cd $MIRTE_SRC_DIR/mirte-python
+	pip3 install .
+fi
 
 # Install Mirte Interface
-cd $MIRTE_SRC_DIR/mirte-install-scripts
-./install_web.sh
+if [[ "$INSTALL_WEB" = true ]]; then
+	cd $MIRTE_SRC_DIR/mirte-install-scripts
+	./install_web.sh
+fi
 
 # Install Jupyter Notebook
 #cd $MIRTE_SRC_DIR/mirte-install-scripts
@@ -105,8 +109,10 @@ fi
 #make html
 #deactivate
 
-cd $MIRTE_SRC_DIR/mirte-install-scripts || exit 1
-./install_vscode.sh
+if [[ "$INSTALL_VSCODE" = true ]]; then
+	cd $MIRTE_SRC_DIR/mirte-install-scripts || exit 1
+	./install_vscode.sh
+fi
 
 # install audio support to use with mirte-pioneer pcb and orange pi zero 2
 sudo apt install pulseaudio libasound2-dev libespeak1 -y

@@ -7,7 +7,7 @@ set -xe
 #TODO: get this as a parameter
 MIRTE_SRC_DIR=/usr/local/src/mirte
 
-# Install ROS Noetic
+# Install ROS Humble
 sudo apt install software-properties-common -y
 sudo add-apt-repository universe -y
 sudo apt update && sudo apt install curl -y

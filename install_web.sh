@@ -31,6 +31,7 @@ deactivate_node
 
 # Install strace for linetrace functionality
 sudo apt install -y strace
+sudo apt install xxd
 
 # Install nginx (as reverse proxy to all services)
 sudo apt install -y nginx libnginx-mod-http-auth-pam
