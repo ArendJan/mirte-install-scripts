@@ -53,6 +53,10 @@ pip3 install .
 #cd $MIRTE_SRC_DIR/mirte-install-scripts
 #./install_arduino.sh
 
+# Install Mirte ROS2 packages
+cd $MIRTE_SRC_DIR/mirte-install-scripts
+./install_ROS2.sh
+
 # Install Mirte Python package
 if [[ "$INSTALL_PYTHON" = true ]]; then
 	cd $MIRTE_SRC_DIR/mirte-python
@@ -68,10 +72,6 @@ fi
 # Install Jupyter Notebook
 #cd $MIRTE_SRC_DIR/mirte-install-scripts
 #./install_jupyter_ros.sh
-
-# Install Mirte ROS2 packages
-cd $MIRTE_SRC_DIR/mirte-install-scripts
-./install_ROS2.sh
 
 # Install numpy
 pip3 install numpy
