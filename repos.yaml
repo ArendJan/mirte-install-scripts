@@ -42,7 +42,7 @@ repositories:
   mirte-telemetrix4rpipico:
     type: git
     url: https://github.com/SuperJappie08/Telemetrix4RpiPico.git
-    version: modules2
+    version: refactor
   mirte-telemetrix-cpp:
     type: git
     url: https://github.com/SuperJappie08/mirte-telemetrix-cpp.git

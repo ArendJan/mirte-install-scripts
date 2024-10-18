@@ -93,7 +93,7 @@ rm -rf colcon-top-level-workspace
 if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	# install lidar and depth camera
 	cd /home/mirte/mirte_ws/src || exit 1
-	git clone https://github.com/Slamtec/rplidar_ros.git -b ros2
+	git clone https://github.com/Slamtec/rplidar_ros.git -b ros2 # FIXME-FUTURE: Can be installed in newer versions if V2.1.5 is released 
 	git clone https://github.com/rafal-gorecki/ros2_astra_camera.git -b master # compressed images image transport fixes, fork of orbbec/...
 	git clone https://github.com/clearpathrobotics/clearpath_mecanum_drive_controller
 	cd ../../
