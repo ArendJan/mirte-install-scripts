@@ -94,12 +94,15 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	# install lidar and depth camera
 	cd /home/mirte/mirte_ws/src || exit 1
 	git clone https://github.com/Slamtec/rplidar_ros.git -b ros2 # FIXME-FUTURE: Can be installed in newer versions if V2.1.5 is released 
+
 	git clone https://github.com/rafal-gorecki/ros2_astra_camera.git -b master # compressed images image transport fixes, fork of orbbec/...
-	git clone https://github.com/clearpathrobotics/clearpath_mecanum_drive_controller
+	# git clone https://github.com/SuperJappie08/ros2_astra_camera.git -b dep-fix # compressed images image transport fixes, fork of orbbec/... # Fork of Fork: Fix dependencies
+	git clone https://github.com/clearpathrobotics/clearpath_mecanum_drive_controller # FIXME: Can be installed from apt? why build?
 	cd ../../
 	mkdir temp
 	cd temp || exit 1
 	sudo apt install -y libudev-dev libusb-1.0-0-dev nlohmann-json3-dev
+	# Install lubuvc-dev manually for newer version
 	git clone https://github.com/libuvc/libuvc.git
 	cd libuvc
 	mkdir build && cd build
