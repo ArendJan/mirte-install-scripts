@@ -7,15 +7,17 @@ set -xe
 #TODO: get this as a parameter
 MIRTE_SRC_DIR=/usr/local/src/mirte
 
-# Install ROS Humble
+# shellcheck source=/dev/null
+source /etc/os-release
+
+# Install ROS 2 (Humble)
 sudo apt install software-properties-common -y
 sudo add-apt-repository universe -y
 sudo apt update && sudo apt install curl -y
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list >/dev/null
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $UBUNTU_CODENAME main" | sudo tee /etc/apt/sources.list.d/ros2.list >/dev/null
 sudo apt update
 
-. /etc/os-release
 # select ros2 type based on UBUNTU_CODENAME
 if [[ $UBUNTU_CODENAME == "jammy" ]]; then
 	ROS_NAME=humble
@@ -26,11 +28,11 @@ else
 	exit 1
 fi
 
-
 sudo apt install -y ros-$ROS_NAME-ros-base
 sudo apt install -y ros-$ROS_NAME-xacro
 sudo apt install -y ros-dev-tools
 grep -qxF "source /opt/ros/$ROS_NAME/setup.bash" /home/mirte/.bashrc || echo "source /opt/ros/$ROS_NAME/setup.bash" >>/home/mirte/.bashrc
+# shellcheck source=/dev/null
 source /opt/ros/$ROS_NAME/setup.bash
 sudo rosdep init
 rosdep update
@@ -65,6 +67,7 @@ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
 grep -qxF "source /home/mirte/mirte_ws/install/setup.bash" /home/mirte/.bashrc || echo "source /home/mirte/mirte_ws/install/setup.bash" >>/home/mirte/.bashrc
 grep -qxF "source /home/mirte/mirte_ws/install/setup.zsh" /home/mirte/.zshrc || echo "source /home/mirte/mirte_ws/install/setup.zsh" >>/home/mirte/.zshrc
 
+# shellcheck source=/dev/null
 source /home/mirte/mirte_ws/install/setup.bash
 
 # install missing python dependencies rosbridge
@@ -127,6 +130,7 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	cd /home/mirte/mirte_ws/ || exit 1
 	rosdep install -y --from-paths src/ --ignore-src --rosdistro $ROS_NAME
 	colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+	# shellcheck source=/dev/null
 	source ./install/setup.bash
 	cd src/ros2_astra_camera/astra_camera
 	chmod +x ./scripts/install.sh || true
