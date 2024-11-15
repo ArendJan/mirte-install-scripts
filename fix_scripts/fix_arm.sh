@@ -1,5 +1,7 @@
 #!/bin/bash
 set -xe
+#TODO: fix for ROS2 if required
+
 rm -rf ~/arm_temp || true
 mkdir ~/arm_temp
 cd ~/arm_temp

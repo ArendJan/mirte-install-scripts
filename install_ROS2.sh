@@ -3,6 +3,7 @@ set -xe
 # IMPORTANT:
 # Do not upgrade apt-get since it will break the image. libc-bin will for some
 # reason break and not be able to install new stuff on the image.
+# TODO: check above info
 
 #TODO: get this as a parameter
 MIRTE_SRC_DIR=/usr/local/src/mirte
@@ -47,12 +48,12 @@ sudo pip3 install pyzbar mergedeep
 #rm $MIRTE_SRC_DIR/mirte-ros-packages/mirte_telemetrix/config/mirte_user_settings.yaml
 #ln -s /home/mirte/.user_settings.yaml $MIRTE_SRC_DIR/mirte-ros-packages/config/mirte_user_settings.yaml
 
+# TODO: install in a separate workspace or install the debs.
 # Install Mirte ROS package
 python3 -m pip install mergedeep
 mkdir -p /home/mirte/mirte_ws/src
 cd /home/mirte/mirte_ws/src
 ln -s $MIRTE_SRC_DIR/mirte-ros-packages .
-ln -s $MIRTE_SRC_DIR/mirte-telemetrix-cpp .
 
 # Install source dependencies for slam
 sudo apt install ros-$ROS_NAME-slam-toolbox -y
@@ -89,12 +90,6 @@ sudo systemctl enable $ROS_SERVICE_NAME
 
 sudo usermod -a -G video mirte
 sudo adduser mirte dialout
-python3 -m pip install telemetrix-rpi-pico
-
-# Install OLED dependencies (adafruit dependecies often break, so explicityle set to versions)
-sudo apt install -y python3-bitstring libfreetype6-dev libjpeg-dev zlib1g-dev fonts-dejavu
-sudo pip3 install adafruit-circuitpython-busdevice==5.1.1 adafruit-circuitpython-framebuf==1.4.9 adafruit-circuitpython-typing==1.7.0 Adafruit-PlatformDetect==3.22.1
-sudo pip3 install pillow adafruit-circuitpython-ssd1306==2.12.1
 
 # Some nice extra packages: clean can clean workspaces and packages. No need to do it by hand. lint can check for errors in the cmake/package code.
 sudo pip3 install colcon-clean colcon-lint

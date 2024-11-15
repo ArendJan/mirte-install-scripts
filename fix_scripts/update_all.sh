@@ -1,5 +1,7 @@
 #!/bin/bash
 set -xe
+#TODO: fix for ROS2 if required
+
 sudo systemctl stop mirte-ros
 mkdir ~/update_all || true
 cd ~/update_all

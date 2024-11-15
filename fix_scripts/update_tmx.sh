@@ -1,5 +1,7 @@
 #!/bin/bash
 set -xe
+#TODO: fix for ROS2 if required
+
 mkdir temp_upd
 cd temp_upd
 wget https://mirte.arend-jan.com/files/telemetrix/modules2/Telemetrix4RpiPico.uf2

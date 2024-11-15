@@ -1,5 +1,7 @@
 #!/bin/bash
 set -xe
+
+THIS SCRIPT IS NOT USED ANYMORE, LOOK AT install_ROS2.sh
 #TODO: get this as a parameter
 MIRTE_SRC_DIR=/usr/local/src/mirte
 

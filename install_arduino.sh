@@ -62,9 +62,10 @@ sudo bash -c 'echo "mirte ALL = (root) NOPASSWD: /usr/local/bin/arduino-cli" >> 
 
 # Install picotool for the Raspberry Pi Pico
 sudo apt install build-essential pkg-config libusb-1.0-0-dev cmake -y
-cd /tmp/ || exit 1
+cd /home/mirte/ || exit 1
+mkdir pico/
 git clone https://github.com/raspberrypi/pico-sdk.git # somehow needed for picotool
-export PICO_SDK_PATH=/tmp/pico-sdk
+export PICO_SDK_PATH=/home/mirte/pico/pico-sdk
 git clone https://github.com/raspberrypi/picotool.git
 cd picotool || exit 1
 sudo cp udev/99-picotool.rules /etc/udev/rules.d/
@@ -75,17 +76,14 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 make -j
 sudo make install
 
-cd /tmp || exit 1
-rm -rf pico-sdk
-rm -rf picotool
 
 #  Download latest uf2 release, resulting in Telemetrix4RpiPico.uf2
 # TODO:  Downlaods from arendjan/telemetrix4rpipico, as it isn't released yet on the official repo
 cd $MIRTE_SRC_DIR/mirte-install-scripts || exit 1
-# curl -s https://api.github.com/repos/arendjan/telemetrix4rpipico/releases/latest |
-# 	grep ".*/Telemetrix4RpiPico.uf2" |
-# 	cut -d : -f 2,3 |
-# 	tr -d \" |
-# 	wget -qi -
+curl -s https://api.github.com/repos/arendjan/telemetrix4rpipico/releases/latest |
+	grep ".*/Telemetrix4RpiPico.uf2" |
+	cut -d : -f 2,3 |
+	tr -d \" |
+	wget -qi -
 
-wget https://mirte.arend-jan.com/files/telemetrix/modules2/Telemetrix4RpiPico.uf2
+# wget https://mirte.arend-jan.com/files/telemetrix/modules2/Telemetrix4RpiPico.uf2
