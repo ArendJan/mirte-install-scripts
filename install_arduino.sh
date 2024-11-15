@@ -76,7 +76,6 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 make -j
 sudo make install
 
-
 #  Download latest uf2 release, resulting in Telemetrix4RpiPico.uf2
 # TODO:  Downlaods from arendjan/telemetrix4rpipico, as it isn't released yet on the official repo
 cd $MIRTE_SRC_DIR/mirte-install-scripts || exit 1
