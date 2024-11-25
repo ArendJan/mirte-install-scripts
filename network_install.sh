@@ -81,7 +81,7 @@ sudo bash -c 'echo "Mirte-XXXXXX" > /etc/hostname'
 sudo chmod 777 /etc/hostname
 
 # Fix for wpa_supplicant error
-sudo bash -c "echo 'match-device=driver:wlan0' >> /etc/NetworkManager/NetworkManager.conf"
+# sudo bash -c "echo 'match-device=driver:wlan0' >> /etc/NetworkManager/NetworkManager.conf"
 
 # Reboot after kernel panic
 # The OPi has a fairly unstable wifi driver which might
