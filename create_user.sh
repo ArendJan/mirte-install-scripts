@@ -7,7 +7,7 @@ MIRTE_SRC_DIR=/usr/local/src/mirte
 sudo useradd -m -G sudo,audio -s /bin/bash mirte
 sudo mkdir /home/mirte/workdir
 sudo chown mirte:mirte /home/mirte/workdir
-
+sudo apt-get install libpam0g-dev
 sudo ./install_pam.sh # setup pam before changing the password for the mirte user.
 
 echo "mirte:mirte_mirte" | sudo chpasswd
