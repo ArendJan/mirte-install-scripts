@@ -60,8 +60,8 @@ sudo apt install -y inotify-tools wireless-tools
 # Disable ssh root login
 sed -i 's/#PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
 
-# Install usb_ethernet script from EV3
-wget https://raw.githubusercontent.com/ev3dev/ev3-systemd/ev3dev-buster/scripts/ev3-usb.sh -P $MIRTE_SRC_DIR/mirte-install-scripts
+# Install usb_ethernet script from EV3 (already downlaoded with a fix)
+# wget https://raw.githubusercontent.com/ev3dev/ev3-systemd/ev3dev-buster/scripts/ev3-usb.sh -P $MIRTE_SRC_DIR/mirte-install-scripts
 sudo chmod +x $MIRTE_SRC_DIR/mirte-install-scripts/ev3-usb.sh
 sudo chown mirte:mirte $MIRTE_SRC_DIR/mirte-install-scripts/ev3-usb.sh
 sudo bash -c 'echo "libcomposite" >> /etc/modules'
