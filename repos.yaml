@@ -1,28 +1,29 @@
 repositories:
   mirte-web-interface:
     type: git
-    url: https://github.com/SuperJappie08/mirte-web-interface.git
-    version: ros2-dev
+    url: https://github.com/mirte-robot/mirte-web-interface.git
+    version: develop
   mirte-telemetrix4arduino:
     type: git
     url: https://github.com/mirte-robot/Telemetrix4Arduino.git
     version: master
   mirte-install-scripts:
     type: git
-    url: https://github.com/SuperJappie08/mirte-install-scripts.git
-    version: mirte-ros2
-  mirte-telemetrix-aio:
-    type: git
-    url: https://github.com/mirte-robot/telemetrix-aio.git
-    version: master
-  mirte-tmx-pico-aio:
-    type: git
-    url: https://github.com/arendjan/tmx-pico-aio.git
-    version: modules
+    url: https://github.com/mirte-robot/mirte-install-scripts.git
+    version: develop
+  # mirte-telemetrix-aio:
+  #   type: git
+  #   url: https://github.com/mirte-robot/telemetrix-aio.git
+  #   version: master
+  # mirte-tmx-pico-aio:
+  #   type: git
+  #   url: https://github.com/arendjan/tmx-pico-aio.git
+  #   version: modules
   mirte-ros-packages:
     type: git
-    url: https://github.com/SuperJappie08/mirte-ros-packages.git
-    version: mirte-ros2
+    url: https://github.com/mirte-robot/mirte-ros-packages.git
+    version: develop
+    recursive: true
   mirte-oled-images:
     type: git
     url: https://github.com/mirte-robot/mirte-oled-images.git
@@ -33,18 +34,18 @@ repositories:
     version: main
   mirte-python:
     type: git
-    url: https://github.com/SuperJappie08/mirte-python.git
-    version: ros2-dev
+    url: https://github.com/mirte-robot/mirte-python.git
+    version: develop
   mirte-documentation:
     type: git
-    url: https://github.com/arendjan/mirte-documentation.git
-    version: mirte-master
+    url: https://github.com/mirte-robot/mirte-documentation.git
+    version: develop
   mirte-telemetrix4rpipico:
     type: git
-    url: https://github.com/SuperJappie08/Telemetrix4RpiPico.git
-    version: refactor
-  mirte-telemetrix-cpp:
-    type: git
-    url: https://github.com/SuperJappie08/mirte-telemetrix-cpp.git
-    version: mirte-pioneer
-    recursive: true
+    url: https://github.com/mirte-robot/Telemetrix4RpiPico.git
+    version: develop
+  # mirte-telemetrix-cpp:
+  #   type: git
+  #   url: https://github.com/mirte-robot/mirte-telemetrix-cpp.git
+  #   version: mirte-pioneer
+    
