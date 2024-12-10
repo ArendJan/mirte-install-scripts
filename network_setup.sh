@@ -79,7 +79,6 @@ function check_connection {
 		sudo rm -rf /etc/resolv.conf
 		sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
 
-
 		printf 'Connected to wifi connection:'
 		nmcli con show --active | grep wlan0
 		$MIRTE_SRC_DIR/mirte-install-scripts/blink.sh "$(hostname -I)" &
