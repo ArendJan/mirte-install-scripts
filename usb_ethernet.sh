@@ -4,7 +4,7 @@
 # The Linux and MacOS version will connect to usb0, whil Windows will connect
 # to usb1. Both networks then are shown on the host.
 MIRTE_SRC_DIR=/usr/local/src/mirte
-
+modprobe libcomposite
 sudo killall -9 dnsmasq
 sudo $MIRTE_SRC_DIR/mirte-install-scripts/ev3-usb.sh down "$(ls /sys/class/udc | tail -n1)" || true
 sudo $MIRTE_SRC_DIR/mirte-install-scripts/ev3-usb.sh up "$(ls /sys/class/udc | tail -n1)" || true

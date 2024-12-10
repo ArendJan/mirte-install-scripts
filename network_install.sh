@@ -66,7 +66,7 @@ sed -i 's/#PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
 # wget https://raw.githubusercontent.com/ev3dev/ev3-systemd/ev3dev-buster/scripts/ev3-usb.sh -P $MIRTE_SRC_DIR/mirte-install-scripts
 sudo chmod +x $MIRTE_SRC_DIR/mirte-install-scripts/ev3-usb.sh
 sudo chown mirte:mirte $MIRTE_SRC_DIR/mirte-install-scripts/ev3-usb.sh
-sudo bash -c 'echo "libcomposite" >> /etc/modules'
+# sudo bash -c 'echo "libcomposite" >> /etc/modules'
 # remove g_serial from modules to let the ev3-usb script enable usb ethernet on the orange pi zero 1 as well.
 sudo bash -c "sed -i '/g_serial/d' /etc/modules"
 
