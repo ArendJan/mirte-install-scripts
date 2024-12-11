@@ -41,4 +41,5 @@ jobs:
 
         sudo apt update
         cd $MIRTE_SRC_DIR/mirte-install-scripts/
+        sudo sed -i '/systemctl/d' install_ROS2.sh # remove systemctl command as it is not available in the github runner/container
         sudo ./install_ROS2.sh
