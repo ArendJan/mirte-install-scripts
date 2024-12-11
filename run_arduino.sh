@@ -1,11 +1,10 @@
 #!/bin/bash
-#TODO: script should have format ./run.sh build|upload] mcu_type arduino_folder
-# with mcu_type and arduino_folder optional
-
+#TODO: script should have format ./run.sh build|upload] mcu_type
+MIRTE_SRC_DIR=/usr/local/src/mirte
 # Check if ROS is running
 ROS_RUNNING=$(systemctl is-active mirte-ros || /bin/true)
 COMMAND=$1
-PROJECT=$2
+PROJECT="mirte-telemetrix4arduino"
 # Stop ROS when uploading new code
 STOPPED_ROS=false
 if [[ $COMMAND == upload* ]] && [[ $ROS_RUNNING == "1" ]]; then # test for any upload... command
@@ -13,7 +12,7 @@ if [[ $COMMAND == upload* ]] && [[ $ROS_RUNNING == "1" ]]; then # test for any u
 	sudo service mirte-ros stop || /bin/true
 	STOPPED_ROS=true
 fi
-cd /home/mirte/arduino_project/$PROJECT || exit 1
+cd $MIRTE_SRC_DIR/$PROJECT || exit 1
 
 # Different build scripts
 if [[ $COMMAND == build* ]]; then
@@ -27,6 +26,7 @@ if [[ $COMMAND == build* ]]; then
 		arduino-cli -v compile --fqbn arduino:avr:nano:cpu=atmega328old /home/mirte/arduino_project/$PROJECT
 	elif test "$COMMAND" == "build_pico"; then
 		cd $MIRTE_SRC_DIR/mirte-telemetrix4rpipico || exit 1
+		# shellcheck disable=SC2164
 		cd build || mkdir build && cd build
 		cmake ..
 		make

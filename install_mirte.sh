@@ -41,17 +41,9 @@ pip3 install .
 cd $MIRTE_SRC_DIR/mirte-tmx-pico-aio
 pip3 install .
 
-# Install Telemtrix4Arduino project
-# TODO: building STM sometimes fails (and/or hangs)
-#cd $MIRTE_SRC_DIR/mirte-install-scripts
-#mkdir -p /home/mirte/Arduino/libraries
-#mkdir -p /home/mirte/arduino_project/Telemetrix4Arduino
-#ln -s $MIRTE_SRC_DIR/mirte-telemetrix4arduino /home/mirte/Arduino/libraries/Telemetrix4Arduino
-#ln -s $MIRTE_SRC_DIR/mirte-telemetrix4arduino/examples/Telemetrix4Arduino/Telemetrix4Arduino.ino /home/mirte/arduino_project/Telemetrix4Arduino
-
-# Install arduino firmata upload script
-#cd $MIRTE_SRC_DIR/mirte-install-scripts
-#./install_arduino.sh
+Install arduino firmata upload script
+cd $MIRTE_SRC_DIR/mirte-install-scripts
+./install_arduino.sh
 
 # Install Mirte ROS2 packages
 cd $MIRTE_SRC_DIR/mirte-install-scripts

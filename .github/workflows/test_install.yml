@@ -1,0 +1,24 @@
+name: test-install-parts
+
+on: [push, pull_request]
+
+jobs:
+  arduino-install:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - run: |
+        mkdir -p /etc/udev/rules.d/ # just for testing, folder should just exist on the real image
+        adduser mirte 
+        MIRTE_SRC_DIR=/usr/local/src/mirte
+        sudo mkdir -p $MIRTE_SRC_DIR
+        mkdir $MIRTE_SRC_DIR/mirte-install-scripts/
+        cp -r ./* $MIRTE_SRC_DIR/mirte-install-scripts/
+        cd $MIRTE_SRC_DIR
+        sudo apt update
+        git clone https://github.com/mirte-robot/telemetrix4arduino.git mirte-telemetrix4arduino -b develop
+        # TODO: clone rpipico
+        git clone https://github.com/mirte-robot/telemetrix4rpipico.git mirte-telemetrix4rpipico -b develop --recursive
+        cd $MIRTE_SRC_DIR/mirte-install-scripts/
+        ./install_arduino.sh
