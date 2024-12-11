@@ -40,10 +40,11 @@ mkdir /home/mirte/arduino_project/Blink
 ln -s $MIRTE_SRC_DIR/mirte-install-scripts/Blink.ino /home/mirte/arduino_project/Blink
 
 # Already build all versions so only upload is needed
-./run_arduino.sh build Telemetrix4Arduino
-./run_arduino.sh build_nano Telemetrix4Arduino
-./run_arduino.sh build_nano_old Telemetrix4Arduino
-./run_arduino.sh build_uno Telemetrix4Arduino
+# TODO: somehow this takes ages, removed for now:
+# ./run_arduino.sh build Telemetrix4Arduino
+# ./run_arduino.sh build_nano Telemetrix4Arduino
+# ./run_arduino.sh build_nano_old Telemetrix4Arduino
+# ./run_arduino.sh build_uno Telemetrix4Arduino
 
 # Add mirte to dialout
 sudo adduser mirte dialout
@@ -58,3 +59,30 @@ echo -e "mirte_mirte\nmirte_mirte" | sudo passwd root
 # Enable tuploading from remote IDE
 sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/run-avrdude /usr/bin
 sudo bash -c 'echo "mirte ALL = (root) NOPASSWD: /usr/local/bin/arduino-cli" >> /etc/sudoers'
+
+# Install picotool for the Raspberry Pi Pico
+sudo apt install build-essential pkg-config libusb-1.0-0-dev cmake -y
+cd /home/mirte/ || exit 1
+mkdir pico/
+git clone https://github.com/raspberrypi/pico-sdk.git # somehow needed for picotool
+export PICO_SDK_PATH=/home/mirte/pico/pico-sdk
+git clone https://github.com/raspberrypi/picotool.git
+cd picotool || exit 1
+sudo cp udev/99-picotool.rules /etc/udev/rules.d/
+
+mkdir build
+cd build || exit 1
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j
+sudo make install
+
+#  Download latest uf2 release, resulting in Telemetrix4RpiPico.uf2
+# TODO:  Downlaods from arendjan/telemetrix4rpipico, as it isn't released yet on the official repo
+cd $MIRTE_SRC_DIR/mirte-install-scripts || exit 1
+curl -s https://api.github.com/repos/arendjan/telemetrix4rpipico/releases/latest |
+	grep ".*/Telemetrix4RpiPico.uf2" |
+	cut -d : -f 2,3 |
+	tr -d \" |
+	wget -qi -
+
+# wget https://mirte.arend-jan.com/files/telemetrix/modules2/Telemetrix4RpiPico.uf2

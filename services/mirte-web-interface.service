@@ -7,7 +7,7 @@ After=network-online.target
 [Service]
 User=mirte
 # We need bash in bash since ROS noetic and NPM do not work nicely together
-ExecStart=/bin/bash -c '/bin/bash -c "source /home/mirte/mirte_ws/devel/setup.bash && python3 -m mirte_robot.linetrace" & /bin/bash -c "cd /usr/local/src/mirte/mirte-web-interface/ && source ./node_env/bin/activate && cd nodejs-backend && npm run backend"'
+ExecStart=/bin/bash -c '/bin/bash -c "source /home/mirte/mirte_ws/install/setup.bash && python3 -m mirte_robot.linetrace" & /bin/bash -c "cd /usr/local/src/mirte/mirte-web-interface/ && source ./node_env/bin/activate && cd nodejs-backend && npm run backend"'
 # And we need a tty to strace it
 StandardInput=tty-force
 TTYVHangup=yes

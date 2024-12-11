@@ -10,8 +10,8 @@ StartLimitBurst=5
 [Service]
 Restart=always
 RestartSec=5s
-User=mirte
-ExecStart=/usr/local/src/mirte/mirte-install-scripts/services/mirte_ros.sh
+User=mirte 
+ExecStart=/usr/local/src/mirte/mirte-install-scripts/services/mirte_ros.sh minimal_master
 
 [Install]
 WantedBy=multi-user.target

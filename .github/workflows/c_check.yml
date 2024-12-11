@@ -21,7 +21,17 @@ jobs:
     - uses: actions/checkout@v3
     - uses: DoozyX/clang-format-lint-action@v0.14
     - uses: lukka/get-cmake@latest
-    - run: |
+    - name: Build pam module
+      run: |
         apt update && apt install libpam0g-dev -y
         ./install_pam.sh
         ./pam/build/myprogram
+    - name: Build usb_switch
+      run: |
+        cd mirte-master/usb_switch/
+        sudo apt install libgpiod-dev -y
+        mkdir build
+        cd build
+        cmake ..
+        make -j
+      

@@ -1,0 +1,12 @@
+[Unit]
+Description=Mirte USB switch
+After=network.target
+After=ssh.service
+After=network-online.target
+
+[Service]
+User=root 
+ExecStart=/bin/bash -c "/usr/local/src/mirte/mirte-install-scripts/mirte-master/usb_switch/build/mirte_master_usb_switch"
+
+[Install]
+WantedBy=multi-user.target

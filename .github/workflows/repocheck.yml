@@ -1,0 +1,22 @@
+on:
+  # - push
+  - pull_request
+  - workflow_call
+
+name: "reposcheck"
+permissions: {}
+
+jobs:
+  reposcheck:
+    name: reposcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt update
+          curl -s https://packagecloud.io/install/repositories/dirk-thomas/vcstool/script.deb.sh | sudo bash
+          sudo apt-get update
+          sudo apt-get install python3-vcstool -y
+          mkdir check
+      - name: check
+        run: vcs import --input repos.yaml check

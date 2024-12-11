@@ -1,5 +1,7 @@
 #!/bin/bash
 set -xe
+
+THIS SCRIPT IS NOT USED ANYMORE, LOOK AT install_ROS2.sh
 #TODO: get this as a parameter
 MIRTE_SRC_DIR=/usr/local/src/mirte
 
@@ -11,14 +13,15 @@ wget https://apt.kitware.com/kitware-archive.sh
 chmod +x kitware-archive.sh
 sudo ./kitware-archive.sh
 rm kitware-archive.sh
-sudo apt update
+sudo apt update || true
 sudo apt install cmake -y
 # Install ROS Noetic
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
-sudo apt update
+sudo apt update || true
 sudo apt install -y ros-noetic-ros-base python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential python3-catkin-tools python3-osrf-pycommon
 grep -qxF "source /opt/ros/noetic/setup.bash" /home/mirte/.bashrc || echo "source /opt/ros/noetic/setup.bash" >>/home/mirte/.bashrc
+grep -qxF "source /opt/ros/noetic/setup.zsh" /home/mirte/.zshrc || echo "source /opt/ros/noetic/setup.zsh" >>/home/mirte/.zshrc
 source /opt/ros/noetic/setup.bash
 sudo rosdep init
 rosdep update
@@ -38,9 +41,42 @@ mkdir -p /home/mirte/mirte_ws/src
 cd /home/mirte/mirte_ws/src || exit 1
 ln -s $MIRTE_SRC_DIR/mirte-ros-packages .
 cd ..
-rosdep install -y --from-paths src/ --ignore-src --rosdistro noetic
+
+if [[ $MIRTE_TYPE == "mirte-master" ]]; then
+	# install lidar and depth camera
+	cd /home/mirte/mirte_ws/src || exit 1
+	git clone https://github.com/Slamtec/rplidar_ros.git
+	git clone https://github.com/arendjan/ros_astra_camera.git -b fix-image-transport # compressed images
+	git clone https://github.com/arendjan/ridgeback.git
+	cd ../../
+	mkdir temp
+	cd temp || exit 1
+	sudo apt install -y libudev-dev
+	git clone https://github.com/libuvc/libuvc.git
+	cd libuvc
+	mkdir build && cd build
+	cmake .. && make -j4
+	sudo make install
+	sudo ldconfig
+	cd ../../../
+	sudo rm -rf temp
+	cd /home/mirte/mirte_ws/ || exit 1
+	rosdep install -y --from-paths src/ --ignore-src --rosdistro noetic
+	catkin build
+	source ./devel/setup.bash
+	roscd astra_camera
+	./scripts/create_udev_rules
+	sudo udevadm control --reload && sudo udevadm trigger
+	roscd rplidar_ros
+	./scripts/create_udev_rules.sh
+fi
+
+# -r is for continue on error, mirte-ros-packages references astra_camera which is not installed on default images.
+rosdep install -y --from-paths src/ --ignore-src --rosdistro noetic -r
 catkin build
 grep -qxF "source /home/mirte/mirte_ws/devel/setup.bash" /home/mirte/.bashrc || echo "source /home/mirte/mirte_ws/devel/setup.bash" >>/home/mirte/.bashrc
+grep -qxF "source /home/mirte/mirte_ws/devel/setup.zsh" /home/mirte/.zshrc || echo "source /home/mirte/mirte_ws/devel/setup.zsh" >>/home/mirte/.zshrc
+
 source /home/mirte/mirte_ws/devel/setup.bash
 
 # install missing python dependencies rosbridge
@@ -48,13 +84,17 @@ source /home/mirte/mirte_ws/devel/setup.bash
 #sudo pip3 install twisted pyOpenSSL autobahn tornado pymongo
 
 # Add systemd service to start ROS nodes
-sudo rm /lib/systemd/system/mirte-ros.service || true
-sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-ros.service /lib/systemd/system/
+ROS_SERVICE_NAME=mirte-ros
+if [[ $MIRTE_TYPE == "mirte-master" ]]; then # master version should start a different launch file
+	ROS_SERVICE_NAME=mirte-master-ros
+fi
+sudo rm /lib/systemd/system/$ROS_SERVICE_NAME.service || true
+sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/$ROS_SERVICE_NAME.service /lib/systemd/system/
 
 sudo systemctl daemon-reload
-sudo systemctl stop mirte-ros || /bin/true
-sudo systemctl start mirte-ros
-sudo systemctl enable mirte-ros
+sudo systemctl stop $ROS_SERVICE_NAME || /bin/true
+sudo systemctl start $ROS_SERVICE_NAME
+sudo systemctl enable $ROS_SERVICE_NAME
 
 sudo usermod -a -G video mirte
 

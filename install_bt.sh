@@ -48,5 +48,5 @@ if [ "$(uname -a | grep sunxi)" != "" ]; then
 	install_fake_bt
 else
 	# Fix for ps3 controller not connecting
-	sudo sh -c "echo -e '#Fix for ps3 controllers not connecting\nClassicBondedOnly=false\n' >> /etc/bluetooth/input.conf"
+	sudo sh -c "echo '#Fix for ps3 controllers not connecting\nClassicBondedOnly=false\n' >> /etc/bluetooth/input.conf"
 fi
