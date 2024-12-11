@@ -6,7 +6,7 @@ seed="asdf"
 mac=$(ip addr show $(awk 'NR==3{print $1}' /proc/net/wireless | tr -d :) | awk '/ether/{print $2}')
 ssid="xxxxxx"
 # for file in $ssid/ try to decrypt
-for file in "$ssid/*.enc"; do
+for file in $ssid/*.enc; do
 	# decrypt file
 	openssl enc -d -aes256 -k "pass:$seed$mac" -in "$ssid/$file" -out "$ssid/found.txt" && found=true || true
 	if [ "$found" = true ]; then
