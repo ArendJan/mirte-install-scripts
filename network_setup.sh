@@ -129,8 +129,6 @@ function file_empty() {
 
 MIRTE_SRC_DIR=/usr/local/src/mirte
 
-$MIRTE_SRC_DIR/mirte-install-scripts/usb_ethernet.sh
-
 # Create unique SSID
 # This must be run every time on boot, since it should
 # be generated on first boot (so not when generating
@@ -148,6 +146,9 @@ if [ ! -f /etc/ssid ] || [[ $(cat /etc/hostname) == "Mirte-XXXXXX" ]]; then
 fi
 
 check_ssh_host_keys
+
+$MIRTE_SRC_DIR/mirte-install-scripts/usb_ethernet.sh
+
 
 check_connection
 
