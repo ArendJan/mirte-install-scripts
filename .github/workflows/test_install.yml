@@ -12,6 +12,8 @@ jobs:
         mkdir -p /etc/udev/rules.d/ # just for testing, folder should just exist on the real image
         sudo useradd -m -s /bin/bash mirte 
         MIRTE_SRC_DIR=/usr/local/src/mirte
+        ls -ld /usr/local/
+        ls -ld /usr/local/src/
         sudo mkdir -p $MIRTE_SRC_DIR
         mkdir $MIRTE_SRC_DIR/mirte-install-scripts/
         cp -r ./* $MIRTE_SRC_DIR/mirte-install-scripts/
