@@ -3,7 +3,7 @@ set -xe
 # IMPORTANT:
 # Do not upgrade apt-get since it will break the image. libc-bin will for some
 # reason break and not be able to install new stuff on the image.
-# TODO: check above info
+# TODO: check above info, no issues yet (2024-12-11)
 
 #TODO: get this as a parameter
 MIRTE_SRC_DIR=/usr/local/src/mirte
@@ -32,8 +32,7 @@ fi
 sudo apt install -y ros-$ROS_NAME-ros-base
 sudo apt install -y ros-$ROS_NAME-xacro
 sudo apt install -y ros-dev-tools
-grep -qxF "source /opt/ros/$ROS_NAME/setup.bash" /home/mirte/.bashrc || echo "source /opt/ros/$ROS_NAME/setup.bash" >>/home/mirte/.bashrc
-# shellcheck source=/dev/null
+
 source /opt/ros/$ROS_NAME/setup.bash
 sudo rosdep init
 rosdep update
@@ -43,14 +42,13 @@ rosdep update
 sudo apt install -y python3-pip python3-wheel python3-setuptools python3-opencv libzbar0
 sudo pip3 install pyzbar mergedeep
 
-# Move custom settings to writabel filesystem
+# TODO: move configs to mirte bringup
 #cp $MIRTE_SRC_DIR/mirte-ros-packages/mirte_telemetrix/config/mirte_user_settings.yaml /home/mirte/.user_settings.yaml
 #rm $MIRTE_SRC_DIR/mirte-ros-packages/mirte_telemetrix/config/mirte_user_settings.yaml
 #ln -s /home/mirte/.user_settings.yaml $MIRTE_SRC_DIR/mirte-ros-packages/config/mirte_user_settings.yaml
 
 # TODO: install in a separate workspace or install the debs.
 # Install Mirte ROS package
-python3 -m pip install mergedeep
 mkdir -p /home/mirte/mirte_ws/src
 cd /home/mirte/mirte_ws/src
 ln -s $MIRTE_SRC_DIR/mirte-ros-packages .
@@ -90,18 +88,13 @@ if $fallback; then
 	echo "Compiling mirte-ros-packages on-device"
 	cd /home/mirte/mirte_ws/src/mirte-ros-packages || exit 1
 	find . -name ".COLCON_IGNORE" -type f -delete
-	# colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
 fi
 
-# do take
-
-# Install source dependencies for slam
-sudo apt install ros-$ROS_NAME-slam-toolbox -y
 sudo apt install libboost-all-dev -y
 cd /home/mirte/mirte_ws/src || exit 1
 # git clone https://github.com/AlexKaravaev/ros2_laser_scan_matcher
 # git clone https://github.com/AlexKaravaev/csm
-git clone https://github.com/ldrobotSensorTeam/ldlidar_stl_ros2
+# git clone https://github.com/ldrobotSensorTeam/ldlidar_stl_ros2
 git clone https://github.com/RobotWebTools/web_video_server.git -b ros2
 cd .. || exit 1
 rosdep install -y --from-paths src/ --ignore-src --rosdistro $ROS_NAME
@@ -111,10 +104,6 @@ add_rc "source /home/mirte/mirte_ws/install/setup.bash" "source /home/mirte/mirt
 
 # shellcheck source=/dev/null
 source /home/mirte/mirte_ws/install/setup.bash
-
-# install missing python dependencies rosbridge
-#sudo apt install -y libffi-dev libjpeg-dev zlib1g-dev
-#sudo pip3 install twisted pyOpenSSL autobahn tornado pymongo
 
 # Add systemd service to start ROS nodes
 ROS_SERVICE_NAME=mirte-ros
@@ -143,6 +132,9 @@ pip install .
 cd ..
 rm -rf colcon-top-level-workspace
 if [[ $MIRTE_TYPE == "mirte-master" ]]; then
+	# TODO: need to check and edit the next part:
+	sudo apt install ros-$ROS_NAME-slam-toolbox -y
+
 	# install lidar and depth camera
 	cd /home/mirte/mirte_ws/src || exit 1
 	git clone https://github.com/Slamtec/rplidar_ros.git -b ros2 # FIXME-FUTURE: Can be installed in newer versions if V2.1.5 is released
