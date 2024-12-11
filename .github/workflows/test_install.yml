@@ -15,12 +15,12 @@ jobs:
         ls -ld /usr/local/
         ls -ld /usr/local/src/
         sudo mkdir -p $MIRTE_SRC_DIR
-        mkdir $MIRTE_SRC_DIR/mirte-install-scripts/
-        cp -r ./* $MIRTE_SRC_DIR/mirte-install-scripts/
+        sudo mkdir $MIRTE_SRC_DIR/mirte-install-scripts/
+        sudo cp -r ./* $MIRTE_SRC_DIR/mirte-install-scripts/
         cd $MIRTE_SRC_DIR
         sudo apt update
-        git clone https://github.com/mirte-robot/telemetrix4arduino.git mirte-telemetrix4arduino -b develop
+        sudo git clone https://github.com/mirte-robot/telemetrix4arduino.git mirte-telemetrix4arduino -b develop
         # TODO: clone rpipico
-        git clone https://github.com/mirte-robot/telemetrix4rpipico.git mirte-telemetrix4rpipico -b develop --recursive
+        sudo git clone https://github.com/mirte-robot/telemetrix4rpipico.git mirte-telemetrix4rpipico -b develop --recursive
         cd $MIRTE_SRC_DIR/mirte-install-scripts/
-        ./install_arduino.sh
+        sudo ./install_arduino.sh
