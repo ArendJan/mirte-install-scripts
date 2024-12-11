@@ -20,7 +20,7 @@ pio --version
 
 add_rc 'export PATH=$PATH:$HOME/.local/bin'
 # Install picotool for the Raspberry Pi Pico
-sudo apt install  gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib build-essential pkg-config libusb-1.0-0-dev cmake -y
+sudo apt install gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib build-essential pkg-config libusb-1.0-0-dev cmake -y
 cd $MIRTE_SRC_DIR || exit 1
 mkdir pico/
 cd pico/ || exit 1
