@@ -7,7 +7,7 @@ set -xe
 
 #TODO: get this as a parameter
 MIRTE_SRC_DIR=/usr/local/src/mirte
-
+. tools.sh
 # shellcheck source=/dev/null
 source /etc/os-release
 
@@ -55,18 +55,59 @@ mkdir -p /home/mirte/mirte_ws/src
 cd /home/mirte/mirte_ws/src
 ln -s $MIRTE_SRC_DIR/mirte-ros-packages .
 
+# if mirte-ros-packages is from main or develop, use the precompiled version, otherwise compile on-device
+cd $MIRTE_SRC_DIR/mirte-ros-packages
+branch=$(git rev-parse --abbrev-ref HEAD)
+arch=$(dpkg --print-architecture)
+ubuntu_version=$(lsb_release -cs)
+github_url=$(git config --get remote.origin.url | sed 's/\.git$//')
+fallback=true
+if [[ $branch == "develop" || $branch == "main" ]]; then
+	fallback=false
+
+	# Install mirte ros packages with apt from github, since they take ages to compile and it's easier to update them.
+	# colcon ignore those packages
+
+	echo "Using precompiled version of mirte-ros-packages"
+	cd /home/mirte/mirte_ws/src/mirte-ros-packages || exit 1
+	ignore=(mirte_telemetrix_cpp mirte_msgs mirte_teleop mirte_base_control mirte_control)
+	packages=''
+	for i in "${ignore[@]}"; do
+		touch $i/COLCON_IGNORE
+		i_dash=$(echo $i | tr '_' '-')
+		packages="$packages ros-$ROS_NAME-$i_dash"
+	done
+	if [[ $branch == "develop" ]]; then
+		arch="${arch}_develop"
+	fi
+	echo "deb [trusted=yes] $github_url/raw/ros_mirte_${ROS_NAME}_${ubuntu_version}_${arch}/ ./" | sudo tee /etc/apt/sources.list.d/mirte-ros-packages.list
+	echo "yaml $github_url/raw/ros_mirte_${ROS_NAME}_${ubuntu_version}_${arch}/local.yaml ${ROS_NAME}" | sudo tee /etc/ros/rosdep/sources.list.d/mirte-ros-packages.list
+	sudo apt update
+	sudo apt install -y $packages || fallback=true
+fi
+
+if $fallback; then
+	echo "Compiling mirte-ros-packages on-device"
+	cd /home/mirte/mirte_ws/src/mirte-ros-packages || exit 1
+	find . -name ".COLCON_IGNORE" -type f -delete
+	# colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+fi
+
+# do take
+
 # Install source dependencies for slam
 sudo apt install ros-$ROS_NAME-slam-toolbox -y
 sudo apt install libboost-all-dev -y
-git clone https://github.com/AlexKaravaev/ros2_laser_scan_matcher
-git clone https://github.com/AlexKaravaev/csm
+cd /home/mirte/mirte_ws/src || exit 1
+# git clone https://github.com/AlexKaravaev/ros2_laser_scan_matcher
+# git clone https://github.com/AlexKaravaev/csm
 git clone https://github.com/ldrobotSensorTeam/ldlidar_stl_ros2
 git clone https://github.com/RobotWebTools/web_video_server.git -b ros2
-cd ..
+cd .. || exit 1
 rosdep install -y --from-paths src/ --ignore-src --rosdistro $ROS_NAME
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
-grep -qxF "source /home/mirte/mirte_ws/install/setup.bash" /home/mirte/.bashrc || echo "source /home/mirte/mirte_ws/install/setup.bash" >>/home/mirte/.bashrc
-grep -qxF "source /home/mirte/mirte_ws/install/setup.zsh" /home/mirte/.zshrc || echo "source /home/mirte/mirte_ws/install/setup.zsh" >>/home/mirte/.zshrc
+
+add_rc "source /home/mirte/mirte_ws/install/setup.bash" "source /home/mirte/mirte_ws/install/setup.zsh"
 
 # shellcheck source=/dev/null
 source /home/mirte/mirte_ws/install/setup.bash

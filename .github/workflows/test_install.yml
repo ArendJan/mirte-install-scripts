@@ -20,7 +20,25 @@ jobs:
         cd $MIRTE_SRC_DIR
         sudo apt update
         sudo git clone https://github.com/mirte-robot/telemetrix4arduino.git mirte-telemetrix4arduino -b develop
-        # TODO: clone rpipico
         sudo git clone https://github.com/mirte-robot/telemetrix4rpipico.git mirte-telemetrix4rpipico -b develop --recursive
         cd $MIRTE_SRC_DIR/mirte-install-scripts/
         sudo ./install_arduino.sh
+
+  ros2-install:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - run: |
+        sudo useradd -m -s /bin/bash mirte 
+        MIRTE_SRC_DIR=/usr/local/src/mirte
+        sudo mkdir -p $MIRTE_SRC_DIR
+      
+        sudo mkdir $MIRTE_SRC_DIR/mirte-install-scripts/
+        sudo cp -r ./* $MIRTE_SRC_DIR/mirte-install-scripts/
+        cd $MIRTE_SRC_DIR
+        sudo git clone https://github.com/arendjan/mirte-ros-packages.git mirte-ros-packages -b develop --recursive
+
+        sudo apt update
+        cd $MIRTE_SRC_DIR/mirte-install-scripts/
+        sudo ./install_ROS2.sh
