@@ -3,7 +3,7 @@
 set -xe
 
 seed="asdf"
-mac=$(ip addr show $(awk 'NR==3{print $1}' /proc/net/wireless | tr -d :) | awk '/ether/{print $2}')
+mac=$(ip addr show "$(awk 'NR==3{print $1}' /proc/net/wireless | tr -d :)" | awk '/ether/{print $2}')
 ssid="xxxxxx"
 # for file in $ssid/ try to decrypt
 for file in $ssid/*.enc; do
