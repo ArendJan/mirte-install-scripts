@@ -10,7 +10,7 @@ jobs:
     - uses: actions/checkout@v4
     - run: |
         mkdir -p /etc/udev/rules.d/ # just for testing, folder should just exist on the real image
-        sudo adduser --gecos mirte 
+        sudo adduser --gecos "" mirte 
         MIRTE_SRC_DIR=/usr/local/src/mirte
         sudo mkdir -p $MIRTE_SRC_DIR
         mkdir $MIRTE_SRC_DIR/mirte-install-scripts/
