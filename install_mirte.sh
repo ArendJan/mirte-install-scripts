@@ -33,15 +33,6 @@ sudo apt install -y python3 python3-pip python3-setuptools
 sudo bash -c "echo '[global]' > /etc/pip.conf"
 sudo bash -c "echo 'extra-index-url=https://www.piwheels.org/simple' >> /etc/pip.conf"
 
-# Install telemetrix
-cd $MIRTE_SRC_DIR/mirte-telemetrix-aio || exit 1
-pip3 install .
-cd $MIRTE_SRC_DIR/mirte-tmx-pico-aio || exit 1
-pip3 install .
-cd $MIRTE_SRC_DIR/mirte-tmx-pico-aio
-pip3 install .
-
-Install arduino firmata upload script
 cd $MIRTE_SRC_DIR/mirte-install-scripts
 ./install_arduino.sh
 
@@ -113,6 +104,7 @@ pip3 install simpleaudio pyttsx3 || true # simpleaudio uses an old python instal
 # Install overlayfs and make sd card read only (software)
 sudo apt install -y overlayroot
 # Currently only instaling, not enabled
+
 #sudo bash -c "echo 'overlayroot=\"tmpfs\"' >> /etc/overlayroot.conf"
 
 # remove force ipv4
