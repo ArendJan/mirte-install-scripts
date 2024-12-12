@@ -87,7 +87,7 @@ fi
 if $fallback; then
 	echo "Compiling mirte-ros-packages on-device"
 	cd /home/mirte/mirte_ws/src/mirte-ros-packages || exit 1
-	find . -name ".COLCON_IGNORE" -type f -delete
+	find . -name "COLCON_IGNORE" -type f -delete
 fi
 
 sudo apt install libboost-all-dev -y
@@ -110,13 +110,13 @@ ROS_SERVICE_NAME=mirte-ros
 if [[ $MIRTE_TYPE == "mirte-master" ]]; then # master version should start a different launch file
 	ROS_SERVICE_NAME=mirte-master-ros
 fi
-sudo rm /lib/systemd/system/$ROS_SERVICE_NAME.service || true
-sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/$ROS_SERVICE_NAME.service /lib/systemd/system/
-
+sudo rm /lib/systemd/system/mirte-ros.service || true
+# uses same service name, but different links. The service file starts mirte_ros with the correct launch file as argument
+sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/$ROS_SERVICE_NAME.service /lib/systemd/system/mirte-ros.service
 sudo systemctl daemon-reload
-sudo systemctl stop $ROS_SERVICE_NAME || /bin/true
-sudo systemctl start $ROS_SERVICE_NAME
-sudo systemctl enable $ROS_SERVICE_NAME
+sudo systemctl stop mirte-ros || /bin/true
+sudo systemctl start mirte-ros
+sudo systemctl enable mirte-ros
 
 sudo usermod -a -G video mirte
 sudo adduser mirte dialout

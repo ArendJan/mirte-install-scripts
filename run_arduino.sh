@@ -20,10 +20,8 @@ if [[ $COMMAND == build* ]]; then
 		pio run
 	elif test "$COMMAND" == "build_nano"; then
 		pio run -e nanoatmega328new
-		arduino-cli -v compile --fqbn arduino:avr:nano:cpu=atmega328 /home/mirte/arduino_project/$PROJECT
 	elif test "$COMMAND" == "build_nano_old"; then
 		pio run -e nanoatmega328
-		arduino-cli -v compile --fqbn arduino:avr:nano:cpu=atmega328old /home/mirte/arduino_project/$PROJECT
 	elif test "$COMMAND" == "build_pico"; then
 		cd $MIRTE_SRC_DIR/mirte-telemetrix4rpipico || exit 1
 		# shellcheck disable=SC2164
