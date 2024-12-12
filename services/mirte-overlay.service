@@ -1,0 +1,12 @@
+[Unit]
+Description=Mirte-overlay
+After=mirte-ros.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=false
+ExecStart=/usr/local/src/mirte/mirte-install-scripts/services/mirte_expandoverlay.sh
+TimeoutSec=30
+[Install]
+WantedBy=multi-user.target
+WantedBy=mirte-ros.service

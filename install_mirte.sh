@@ -105,6 +105,15 @@ pip3 install simpleaudio pyttsx3 || true # simpleaudio uses an old python instal
 sudo apt install -y overlayroot
 # Currently only instaling, not enabled
 
+# Install overlayfs (done in sd image tools)
+# Setup expand overlayfs
+{
+	# enable mirte-overlay service
+	sudo rm /lib/systemd/system/mirte-overlay.service || true
+	sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-overlay.service /lib/systemd/system/
+	sudo systemctl enable mirte-overlay.service
+} 2>&1 | sed -u 's/^/overlayfs::: /' &
+
 #sudo bash -c "echo 'overlayroot=\"tmpfs\"' >> /etc/overlayroot.conf"
 
 # remove force ipv4
