@@ -58,10 +58,6 @@ ev3_usb_up() {
 	ms_compat_id="RNDIS"      # matches Windows RNDIS Drivers
 	ms_subcompat_id="5162001" # matches Windows RNDIS 6.0 Driver
 
-	tmpdir=$(mktemp -d)
-	mount /dev/mmcblk0p1 $tmpdir
-	umount $tmpdir
-
 	if [ -d ${g} ]; then
 		if [ "$(cat ${g}/UDC)" != "" ]; then
 			echo "Gadget is already up."
