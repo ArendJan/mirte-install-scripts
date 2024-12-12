@@ -149,7 +149,6 @@ check_ssh_host_keys
 
 $MIRTE_SRC_DIR/mirte-install-scripts/usb_ethernet.sh
 
-
 check_connection
 
 # This should run forever, otherwise systemd will shut it down
