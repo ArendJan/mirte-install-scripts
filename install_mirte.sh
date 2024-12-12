@@ -100,8 +100,6 @@ pip3 install simpleaudio pyttsx3
 
 # Install overlayfs and make sd card read only (software)
 sudo apt install -y overlayroot
-# Currently only instaling, not enabled
-#sudo bash -c "echo 'overlayroot=\"tmpfs\"' >> /etc/overlayroot.conf"
-
+# Currently only instaling, not enabled, sd-image will enable it
 # remove force ipv4
 sudo rm /etc/apt/apt.conf.d/99force-ipv4 || true
