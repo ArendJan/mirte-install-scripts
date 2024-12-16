@@ -15,3 +15,6 @@ jobs:
         uses: ludeeus/action-shellcheck@master
         with:
             severity: warning
+      - name: Check executable bit sh files
+        run: |
+          find . -type f -name "*.sh" -exec sh -c 'if ! test -x {}; then echo "File {} is not executable"; exit 1; fi' \;
