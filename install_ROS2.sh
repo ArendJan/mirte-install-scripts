@@ -33,6 +33,7 @@ sudo apt install -y ros-$ROS_NAME-ros-base
 sudo apt install -y ros-$ROS_NAME-xacro
 sudo apt install -y ros-dev-tools
 
+# shellcheck source=/dev/null
 source /opt/ros/$ROS_NAME/setup.bash
 sudo rosdep init
 rosdep update
