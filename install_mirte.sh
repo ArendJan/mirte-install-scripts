@@ -29,7 +29,6 @@ cd $MIRTE_SRC_DIR || exit 1
 # Install dependencies to be able to run python3 (3.10 default)
 sudo apt install -y python3 python3-pip python3-setuptools python3.10-venv
 
-
 # Set piwheels as pip repo
 sudo bash -c "echo '[global]' > /etc/pip.conf"
 sudo bash -c "echo 'extra-index-url=https://www.piwheels.org/simple' >> /etc/pip.conf"
