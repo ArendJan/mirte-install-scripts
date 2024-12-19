@@ -34,25 +34,8 @@ sudo apt install -y python3 python3-pip python3-setuptools python3.10-venv
 sudo bash -c "echo '[global]' > /etc/pip.conf"
 sudo bash -c "echo 'extra-index-url=https://www.piwheels.org/simple' >> /etc/pip.conf"
 
-# Install telemetrix
-cd $MIRTE_SRC_DIR/mirte-telemetrix-aio || exit 1
-pip3 install .
-cd $MIRTE_SRC_DIR/mirte-tmx-pico-aio || exit 1
-pip3 install .
-cd $MIRTE_SRC_DIR/mirte-tmx-pico-aio
-pip3 install .
-
-# Install Telemtrix4Arduino project
-# TODO: building STM sometimes fails (and/or hangs)
-#cd $MIRTE_SRC_DIR/mirte-install-scripts
-#mkdir -p /home/mirte/Arduino/libraries
-#mkdir -p /home/mirte/arduino_project/Telemetrix4Arduino
-#ln -s $MIRTE_SRC_DIR/mirte-telemetrix4arduino /home/mirte/Arduino/libraries/Telemetrix4Arduino
-#ln -s $MIRTE_SRC_DIR/mirte-telemetrix4arduino/examples/Telemetrix4Arduino/Telemetrix4Arduino.ino /home/mirte/arduino_project/Telemetrix4Arduino
-
-# Install arduino firmata upload script
-#cd $MIRTE_SRC_DIR/mirte-install-scripts
-#./install_arduino.sh
+cd $MIRTE_SRC_DIR/mirte-install-scripts
+./install_arduino.sh
 
 # Install Mirte ROS2 packages
 cd $MIRTE_SRC_DIR/mirte-install-scripts
@@ -122,6 +105,16 @@ pip3 install simpleaudio pyttsx3 || true # simpleaudio uses an old python instal
 # Install overlayfs and make sd card read only (software)
 sudo apt install -y overlayroot
 # Currently only instaling, not enabled
+
+# Install overlayfs (done in sd image tools)
+# Setup expand overlayfs
+{
+	# enable mirte-overlay service
+	sudo rm /lib/systemd/system/mirte-overlay.service || true
+	sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-overlay.service /lib/systemd/system/
+	sudo systemctl enable mirte-overlay.service
+} 2>&1 | sed -u 's/^/overlayfs::: /' &
+
 #sudo bash -c "echo 'overlayroot=\"tmpfs\"' >> /etc/overlayroot.conf"
 
 # remove force ipv4
