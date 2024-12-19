@@ -3,11 +3,11 @@ set -xe
 # IMPORTANT:
 # Do not upgrade apt-get since it will break the image. libc-bin will for some
 # reason break and not be able to install new stuff on the image.
-# TODO: check above info
+# TODO: check above info, no issues yet (2024-12-11)
 
 #TODO: get this as a parameter
 MIRTE_SRC_DIR=/usr/local/src/mirte
-
+. tools.sh
 # shellcheck source=/dev/null
 source /etc/os-release
 
@@ -32,7 +32,7 @@ fi
 sudo apt install -y ros-$ROS_NAME-ros-base
 sudo apt install -y ros-$ROS_NAME-xacro
 sudo apt install -y ros-dev-tools
-grep -qxF "source /opt/ros/$ROS_NAME/setup.bash" /home/mirte/.bashrc || echo "source /opt/ros/$ROS_NAME/setup.bash" >>/home/mirte/.bashrc
+
 # shellcheck source=/dev/null
 source /opt/ros/$ROS_NAME/setup.bash
 sudo rosdep init
@@ -43,50 +43,81 @@ rosdep update
 sudo apt install -y python3-pip python3-wheel python3-setuptools python3-opencv libzbar0
 sudo pip3 install pyzbar mergedeep
 
-# Move custom settings to writabel filesystem
+# TODO: move configs to mirte bringup
 #cp $MIRTE_SRC_DIR/mirte-ros-packages/mirte_telemetrix/config/mirte_user_settings.yaml /home/mirte/.user_settings.yaml
 #rm $MIRTE_SRC_DIR/mirte-ros-packages/mirte_telemetrix/config/mirte_user_settings.yaml
 #ln -s /home/mirte/.user_settings.yaml $MIRTE_SRC_DIR/mirte-ros-packages/config/mirte_user_settings.yaml
 
 # TODO: install in a separate workspace or install the debs.
 # Install Mirte ROS package
-python3 -m pip install mergedeep
 mkdir -p /home/mirte/mirte_ws/src
 cd /home/mirte/mirte_ws/src
 ln -s $MIRTE_SRC_DIR/mirte-ros-packages .
 
-# Install source dependencies for slam
-sudo apt install ros-$ROS_NAME-slam-toolbox -y
+# if mirte-ros-packages is from main or develop, use the precompiled version, otherwise compile on-device
+cd $MIRTE_SRC_DIR/mirte-ros-packages
+branch=$(git rev-parse --abbrev-ref HEAD)
+arch=$(dpkg --print-architecture)
+ubuntu_version=$(lsb_release -cs)
+github_url=$(git config --get remote.origin.url | sed 's/\.git$//')
+fallback=true
+if [[ $branch == "develop" || $branch == "main" ]]; then
+	fallback=false
+
+	# Install mirte ros packages with apt from github, since they take ages to compile and it's easier to update them.
+	# colcon ignore those packages
+
+	echo "Using precompiled version of mirte-ros-packages"
+	cd /home/mirte/mirte_ws/src/mirte-ros-packages || exit 1
+	ignore=(mirte_telemetrix_cpp mirte_msgs mirte_teleop mirte_base_control mirte_control)
+	packages=''
+	for i in "${ignore[@]}"; do
+		touch $i/COLCON_IGNORE
+		i_dash=$(echo $i | tr '_' '-')
+		packages="$packages ros-$ROS_NAME-$i_dash"
+	done
+	if [[ $branch == "develop" ]]; then
+		arch="${arch}_develop"
+	fi
+	echo "deb [trusted=yes] $github_url/raw/ros_mirte_${ROS_NAME}_${ubuntu_version}_${arch}/ ./" | sudo tee /etc/apt/sources.list.d/mirte-ros-packages.list
+	echo "yaml $github_url/raw/ros_mirte_${ROS_NAME}_${ubuntu_version}_${arch}/local.yaml ${ROS_NAME}" | sudo tee /etc/ros/rosdep/sources.list.d/mirte-ros-packages.list
+	sudo apt update
+	sudo apt install -y $packages || fallback=true
+fi
+
+if $fallback; then
+	echo "Compiling mirte-ros-packages on-device"
+	cd /home/mirte/mirte_ws/src/mirte-ros-packages || exit 1
+	find . -name "COLCON_IGNORE" -type f -delete
+fi
+
 sudo apt install libboost-all-dev -y
-git clone https://github.com/AlexKaravaev/ros2_laser_scan_matcher
-git clone https://github.com/AlexKaravaev/csm
-git clone https://github.com/ldrobotSensorTeam/ldlidar_stl_ros2
+cd /home/mirte/mirte_ws/src || exit 1
+# git clone https://github.com/AlexKaravaev/ros2_laser_scan_matcher
+# git clone https://github.com/AlexKaravaev/csm
+# git clone https://github.com/ldrobotSensorTeam/ldlidar_stl_ros2
 git clone https://github.com/RobotWebTools/web_video_server.git -b ros2
-cd ..
+cd .. || exit 1
 rosdep install -y --from-paths src/ --ignore-src --rosdistro $ROS_NAME
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
-grep -qxF "source /home/mirte/mirte_ws/install/setup.bash" /home/mirte/.bashrc || echo "source /home/mirte/mirte_ws/install/setup.bash" >>/home/mirte/.bashrc
-grep -qxF "source /home/mirte/mirte_ws/install/setup.zsh" /home/mirte/.zshrc || echo "source /home/mirte/mirte_ws/install/setup.zsh" >>/home/mirte/.zshrc
+
+add_rc "source /home/mirte/mirte_ws/install/setup.bash" "source /home/mirte/mirte_ws/install/setup.zsh"
 
 # shellcheck source=/dev/null
 source /home/mirte/mirte_ws/install/setup.bash
-
-# install missing python dependencies rosbridge
-#sudo apt install -y libffi-dev libjpeg-dev zlib1g-dev
-#sudo pip3 install twisted pyOpenSSL autobahn tornado pymongo
 
 # Add systemd service to start ROS nodes
 ROS_SERVICE_NAME=mirte-ros
 if [[ $MIRTE_TYPE == "mirte-master" ]]; then # master version should start a different launch file
 	ROS_SERVICE_NAME=mirte-master-ros
 fi
-sudo rm /lib/systemd/system/$ROS_SERVICE_NAME.service || true
-sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/$ROS_SERVICE_NAME.service /lib/systemd/system/
-
+sudo rm /lib/systemd/system/mirte-ros.service || true
+# uses same service name, but different links. The service file starts mirte_ros with the correct launch file as argument
+sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/$ROS_SERVICE_NAME.service /lib/systemd/system/mirte-ros.service
 sudo systemctl daemon-reload
-sudo systemctl stop $ROS_SERVICE_NAME || /bin/true
-sudo systemctl start $ROS_SERVICE_NAME
-sudo systemctl enable $ROS_SERVICE_NAME
+sudo systemctl stop mirte-ros || /bin/true
+sudo systemctl start mirte-ros
+sudo systemctl enable mirte-ros
 
 sudo usermod -a -G video mirte
 sudo adduser mirte dialout
@@ -102,6 +133,9 @@ pip install .
 cd ..
 rm -rf colcon-top-level-workspace
 if [[ $MIRTE_TYPE == "mirte-master" ]]; then
+	# TODO: need to check and edit the next part:
+	sudo apt install ros-$ROS_NAME-slam-toolbox -y
+
 	# install lidar and depth camera
 	cd /home/mirte/mirte_ws/src || exit 1
 	git clone https://github.com/Slamtec/rplidar_ros.git -b ros2 # FIXME-FUTURE: Can be installed in newer versions if V2.1.5 is released
