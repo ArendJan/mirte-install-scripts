@@ -109,7 +109,7 @@ source /home/mirte/mirte_ws/install/setup.bash
 # Add systemd service to start ROS nodes
 ROS_SERVICE_NAME=mirte-ros
 if [[ $MIRTE_TYPE == "mirte-master" ]]; then # master version should start a different launch file
-	ROS_SERVICE_NAME=mirte-master-ros
+	ROS_SERVICE_NAME="mirte-master-ros"
 fi
 sudo rm /lib/systemd/system/mirte-ros.service || true
 # uses same service name, but different links. The service file starts mirte_ros with the correct launch file as argument
