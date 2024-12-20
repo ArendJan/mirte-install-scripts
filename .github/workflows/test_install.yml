@@ -25,7 +25,7 @@ jobs:
         sudo ./install_arduino.sh
 
   ros2-install:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         type: [mirte, mirte-master]
