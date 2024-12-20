@@ -26,14 +26,16 @@ jobs:
 
   ros2-install:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        type: [mirte, mirte-master]
     steps:
     - uses: actions/checkout@v4
     - run: |
         sudo useradd -m -s /bin/bash mirte 
         MIRTE_SRC_DIR=/usr/local/src/mirte
         sudo mkdir -p $MIRTE_SRC_DIR
-      
+
         sudo mkdir $MIRTE_SRC_DIR/mirte-install-scripts/
         sudo cp -r ./* $MIRTE_SRC_DIR/mirte-install-scripts/
         cd $MIRTE_SRC_DIR
@@ -43,4 +45,5 @@ jobs:
         cd $MIRTE_SRC_DIR/mirte-install-scripts/
         sudo sed -i '/systemctl/d' install_ROS2.sh # remove systemctl command as it is not available in the github runner/container
         sudo apt install libunwind-dev -y
+        export MIRTE_TYPE=${{ matrix.type }}
         sudo ./install_ROS2.sh
