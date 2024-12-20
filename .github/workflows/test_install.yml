@@ -46,4 +46,4 @@ jobs:
         sudo sed -i '/systemctl/d' install_ROS2.sh # remove systemctl command as it is not available in the github runner/container
         sudo apt install libunwind-dev -y
         MIRTE_TYPE=${{ matrix.type }}
-        sudo . ./install_ROS2.sh
+        sudo source ./install_ROS2.sh
