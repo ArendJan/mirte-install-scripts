@@ -39,6 +39,10 @@ cd build || exit 1
 cmake .. -DCMAKE_BUILD_TYPE=Release
 make -j
 sudo make install
+
+cd $MIRTE_SRC_DIR/mirte-telemetrix4rpipico || exit 1
+git submodule update --init --recursive
+
 cd $MIRTE_SRC_DIR/mirte-install-scripts/
 # Already build all versions so only upload is needed *don't do for all, as it requires loads of space for the tools.
 # ./run_arduino.sh build Telemetrix4Arduino
