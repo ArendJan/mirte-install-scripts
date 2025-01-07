@@ -35,10 +35,9 @@ jobs:
     - shell: bash
       run: |
         echo $0
-        sudo useradd -m -s /bin/bash mirte 
+        sudo useradd -m -s /bin/bash mirte
         MIRTE_SRC_DIR=/usr/local/src/mirte
         sudo mkdir -p $MIRTE_SRC_DIR
-
         sudo mkdir $MIRTE_SRC_DIR/mirte-install-scripts/
         sudo cp -r ./* $MIRTE_SRC_DIR/mirte-install-scripts/
         cd $MIRTE_SRC_DIR
@@ -49,4 +48,4 @@ jobs:
         sudo sed -i '/systemctl/d' install_ROS2.sh # remove systemctl command as it is not available in the github runner/container
         sudo apt install libunwind-dev -y
         MIRTE_TYPE=${{ matrix.type }}
-        source ./install_ROS2.sh
+        sudo /bin/bash -c "MIRTE_TYPE=${{ matrix.type }} source ./install_ROS2.sh"
