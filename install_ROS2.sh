@@ -107,13 +107,14 @@ add_rc "source /home/mirte/mirte_ws/install/setup.bash" "source /home/mirte/mirt
 source /home/mirte/mirte_ws/install/setup.bash
 
 # Add systemd service to start ROS nodes
-ROS_SERVICE_NAME=mirte-ros
 if [[ $MIRTE_TYPE == "mirte-master" ]]; then # master version should start a different launch file
-	ROS_SERVICE_NAME="mirte-master-ros"
+	# rename the service file to the correct name, otherwise systemctl will error with a "Failed to look up unit file state: Link has been severed" error
+	mv $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-ros.service $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-ros-pioneer.service
+	mv $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-master-ros.service $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-ros.service
 fi
 sudo rm /lib/systemd/system/mirte-ros.service || true
 # uses same service name, but different links. The service file starts mirte_ros with the correct launch file as argument
-sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/$ROS_SERVICE_NAME.service /lib/systemd/system/mirte-ros.service
+sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-ros.service /lib/systemd/system/mirte-ros.service
 sudo systemctl daemon-reload
 sudo systemctl stop mirte-ros || /bin/true
 sudo systemctl start mirte-ros
