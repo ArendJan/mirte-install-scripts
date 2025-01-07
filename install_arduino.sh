@@ -40,10 +40,11 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 make -j
 sudo make install
 cd $MIRTE_SRC_DIR/mirte-install-scripts/
-# Already build all versions so only upload is needed
-./run_arduino.sh build Telemetrix4Arduino
-./run_arduino.sh build_nano Telemetrix4Arduino
-./run_arduino.sh build_nano_old Telemetrix4Arduino
+# Already build all versions so only upload is needed *don't do for all, as it requires loads of space for the tools.
+# ./run_arduino.sh build Telemetrix4Arduino
+./run_arduino.sh upload_nano Telemetrix4Arduino # 'try to upload to the nano', to also install the upload tools.
+# ./run_arduino.sh build_nano_old Telemetrix4Arduino
 ./run_arduino.sh build_pico
+pio system prune -f
 # Add mirte to dialout
 sudo adduser mirte dialout
