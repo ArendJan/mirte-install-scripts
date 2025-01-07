@@ -32,8 +32,9 @@ jobs:
         type: [mirte, mirte-master]
     steps:
     - uses: actions/checkout@v4
-    - shell: bash
+    - shell: /bin/bash
       run: |
+        echo $0
         sudo useradd -m -s /bin/bash mirte 
         MIRTE_SRC_DIR=/usr/local/src/mirte
         sudo mkdir -p $MIRTE_SRC_DIR
