@@ -21,6 +21,12 @@ pio --version
 add_rc 'export PATH=$PATH:$HOME/.local/bin'
 # Install picotool for the Raspberry Pi Pico
 sudo apt install gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib build-essential pkg-config libusb-1.0-0-dev cmake -y
+
+# Remove newlib versions that are not compatible with the pico or pico2, otherwise it takes 2GB of space
+cd /usr/lib/arm-none-eabi/newlib/thumb || true
+rm -rf v8-a* || true
+rm -rf v7* || true
+
 cd $MIRTE_SRC_DIR || exit 1
 mkdir pico/
 cd pico/ || exit 1
