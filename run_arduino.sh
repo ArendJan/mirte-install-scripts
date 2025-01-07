@@ -14,6 +14,15 @@ if [[ $COMMAND == upload* ]] && [[ $ROS_RUNNING == "1" ]]; then # test for any u
 fi
 cd $MIRTE_SRC_DIR/$PROJECT || exit 1
 
+buildpico() {
+	cd $MIRTE_SRC_DIR/mirte-telemetrix4rpipico || exit 1
+	# shellcheck disable=SC2164
+	mkdir -p build && cd build
+	cmake .. -DCMAKE_BUILD_TYPE=Release
+	make
+}
+
+
 # Different build scripts
 if [[ $COMMAND == build* ]]; then
 	if test "$COMMAND" == "build"; then
@@ -23,11 +32,7 @@ if [[ $COMMAND == build* ]]; then
 	elif test "$COMMAND" == "build_nano_old"; then
 		pio run -e nanoatmega328
 	elif test "$COMMAND" == "build_pico"; then
-		cd $MIRTE_SRC_DIR/mirte-telemetrix4rpipico || exit 1
-		# shellcheck disable=SC2164
-		cd build || mkdir build && cd build
-		cmake ..
-		make
+		buildpico
 	else
 		echo "Unknown build command $COMMAND"
 		exit 1
@@ -41,6 +46,7 @@ elif [[ $COMMAND == upload* ]]; then
 	elif test "$COMMAND" == "upload_nano_old"; then
 		pio run -e nanoatmega328 -t upload
 	elif test "$1" == "upload_pico"; then
+		buildpico
 		# This will always upload telemetrix4rpipico.uf2, so no need to pass a file
 		sudo picotool load -f $MIRTE_SRC_DIR/mirte-telemetrix4rpipico/Telemetrix4RpiPico.uf2
 		retVal=$?
