@@ -32,7 +32,7 @@ jobs:
         type: [mirte, mirte-master]
     steps:
     - uses: actions/checkout@v4
-    - shell: /bin/bash
+    - shell: bash
       run: |
         echo $0
         sudo useradd -m -s /bin/bash mirte 
