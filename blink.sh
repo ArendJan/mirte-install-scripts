@@ -11,43 +11,51 @@ if [ "$RPI" ]; then
 	echo none >/sys/class/leds/PWR/trigger
 fi
 
-red_on() {
-	if [ "$OPI" ]; then
-		echo 'default-on' >/sys/class/leds/orangepi\:red\:status/trigger
-	elif [ "$OPI2" ]; then
-		echo '255' >/sys/class/leds/orangepi\:red\:power/brightness
-	elif [ "$RPI" ]; then
-		echo 1 >/sys/class/leds/PWR/brightness
+findleds() {
+	LEDS_ALL=$(ls /sys/class/leds)
+	# try to set green as first led, red as second
+	# if not found, set the first two leds found
+	if echo "$LEDS_ALL" | grep -q "green"; then
+		GR_LED="$(echo "$LEDS_ALL" | grep "green")"
+	elif echo "$LEDS_ALL" | grep -q "ACT"; then
+		GR_LED="$(echo "$LEDS_ALL" | grep "ACT")"
+	else
+		GR_LED="$(echo "$LEDS_ALL" | head -n 1)"
 	fi
+
+	if echo "$LEDS_ALL" | grep -q "red"; then
+		RED_LED="$(echo "$LEDS_ALL" | grep "red")"
+	elif echo "$LEDS_ALL" | grep -q "PWR"; then
+		RED_LED="$(echo "$LEDS_ALL" | grep "PWR")"
+	else
+		RED_LED="$(echo "$LEDS_ALL" | head -n 2 | tail -n 1)"
+	fi
+
+	echo "RED: $RED_LED"
+	echo "GREEN: $GR_LED"
+}
+findleds
+# store trigger to reset later, take only part in [ ] to remove the list of options
+GR_TRIGGER="$(cat /sys/class/leds/$GR_LED/trigger | awk -F'[][]' '{print $2}')"
+RED_TRIGGER="$(cat /sys/class/leds/$RED_LED/trigger | awk -F'[][]' '{print $2}')"
+
+echo "none" >/sys/class/leds/$GR_LED/trigger
+echo "none" >/sys/class/leds/$RED_LED/trigger
+
+
+red_on() {
+	echo 'default-on' >/sys/class/leds/$RED_LED/trigger
 }
 red_off() {
-	if [ "$OPI" ]; then
-		echo 'none' >/sys/class/leds/orangepi\:red\:status/trigger
-	elif [ "$OPI2" ]; then
-		echo '0' >/sys/class/leds/orangepi\:red\:power/brightness
-	elif [ "$RPI" ]; then
-		echo '0' >/sys/class/leds/PWR/brightness
-	fi
+	echo 'none' >/sys/class/leds/$RED_LED/trigger
 }
 
 green_on() {
-	if [ "$OPI" ]; then
-		echo 'default-on' >/sys/class/leds/orangepi\:green\:pwr/trigger
-	elif [ "$OPI2" ]; then
-		echo '255' >/sys/class/leds/orangepi\:green\:status/brightness
-	elif [ "$RPI" ]; then
-		echo 1 >/sys/class/leds/ACT/brightness
-	fi
+	echo 'default-on' >/sys/class/leds/$GR_LED/trigger
 }
 
 green_off() {
-	if [ "$OPI" ]; then
-		echo 'none' >/sys/class/leds/orangepi\:green\:pwr/trigger
-	elif [ "$OPI2" ]; then
-		echo '0' >/sys/class/leds/orangepi\:green\:status/brightness
-	elif [ "$RPI" ]; then
-		echo 0 >/sys/class/leds/ACT/brightness
-	fi
+	echo 'none' >/sys/class/leds/$GR_LED/trigger
 }
 
 echo "Blinking"
@@ -101,5 +109,5 @@ for ((repeat = 0; repeat < 5; repeat++)); do
 done
 
 # Reset to defaults
-green_on
-red_off
+echo "$GR_TRIGGER" >/sys/class/leds/$GR_LED/trigger
+echo "$RED_TRIGGER" >/sys/class/leds/$RED_LED/trigger

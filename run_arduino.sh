@@ -22,7 +22,6 @@ buildpico() {
 	make
 }
 
-
 # Different build scripts
 if [[ $COMMAND == build* ]]; then
 	if test "$COMMAND" == "build"; then
