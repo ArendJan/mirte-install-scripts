@@ -1,9 +1,22 @@
 #!/bin/bash
 #TODO: script should have format ./run.sh build|upload] mcu_type
+COMMAND=$1
+
+if [ -z "$COMMAND" ]; then
+	echo "Usage: $0 build_[mcu] | upload_[mcu]"
+	echo "Example: $0 build_nano"
+	echo "MCU types: nano, nano_old, pico, stm32"
+	exit 1
+fi
+
 MIRTE_SRC_DIR=/usr/local/src/mirte
 # Check if ROS is running
-ROS_RUNNING=$(systemctl is-active mirte-ros || /bin/true)
-COMMAND=$1
+ROS_RUNNING=1
+systemctl is-active mirte-ros | grep 'inactive' &>/dev/null
+if [ $? == 0 ]; then
+	ROS_RUNNING=0
+fi
+echo "ROS_RUNNING: $ROS_RUNNING"
 PROJECT="mirte-telemetrix4arduino"
 # Stop ROS when uploading new code
 STOPPED_ROS=false
@@ -25,10 +38,12 @@ buildpico() {
 # Different build scripts
 if [[ $COMMAND == build* ]]; then
 	if test "$COMMAND" == "build"; then
+		echo "Building all versions, this will take a while and might need internet connection for tools"
 		pio run
 	elif test "$COMMAND" == "build_nano"; then
 		pio run -e nanoatmega328new
 	elif test "$COMMAND" == "build_nano_old"; then
+		echo "Building non-default mcu, might need internet connection for tools"
 		pio run -e nanoatmega328
 	elif test "$COMMAND" == "build_pico"; then
 		buildpico
@@ -39,10 +54,12 @@ if [[ $COMMAND == build* ]]; then
 elif [[ $COMMAND == upload* ]]; then
 	# Different upload scripts
 	if test "$COMMAND" == "upload" || test "$COMMAND" == "upload_stm32"; then
+		echo "Uploading to non-default mcu, might need internet connection for tools"
 		pio run -e robotdyn_blackpill_f303cc -t upload
 	elif test "$COMMAND" == "upload_nano"; then
 		pio run -e nanoatmega328new -t upload
 	elif test "$COMMAND" == "upload_nano_old"; then
+		echo "Uploading to non-default mcu, might need internet connection for tools"
 		pio run -e nanoatmega328 -t upload
 	elif test "$1" == "upload_pico"; then
 		buildpico

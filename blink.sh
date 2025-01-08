@@ -2,14 +2,6 @@
 
 BLINK_SPEED=.5
 VALUE=$1
-OPI=$(uname -a | grep sunxi)
-OPI2=$(grep "Orange Pi Zero 2" /proc/device-tree/model)
-RPI=$(grep -a "Raspberry" /proc/device-tree/model)
-
-if [ "$RPI" ]; then
-	echo none >/sys/class/leds/ACT/trigger
-	echo none >/sys/class/leds/PWR/trigger
-fi
 
 findleds() {
 	LEDS_ALL=$(ls /sys/class/leds)
@@ -35,13 +27,12 @@ findleds() {
 	echo "GREEN: $GR_LED"
 }
 findleds
-# store trigger to reset later, take only part in [ ] to remove the list of options
-GR_TRIGGER="$(cat /sys/class/leds/$GR_LED/trigger | awk -F'[][]' '{print $2}')"
-RED_TRIGGER="$(cat /sys/class/leds/$RED_LED/trigger | awk -F'[][]' '{print $2}')"
+# store trigger to reset later to, take only part in [ ] to remove the list of options
+# GR_TRIGGER="$(cat /sys/class/leds/$GR_LED/trigger | awk -F'[][]' '{print $2}')"
+# RED_TRIGGER="$(cat /sys/class/leds/$RED_LED/trigger | awk -F'[][]' '{print $2}')"
 
 echo "none" >/sys/class/leds/$GR_LED/trigger
 echo "none" >/sys/class/leds/$RED_LED/trigger
-
 
 red_on() {
 	echo 'default-on' >/sys/class/leds/$RED_LED/trigger
@@ -108,6 +99,6 @@ for ((repeat = 0; repeat < 5; repeat++)); do
 	done
 done
 
-# Reset to defaults
-echo "$GR_TRIGGER" >/sys/class/leds/$GR_LED/trigger
-echo "$RED_TRIGGER" >/sys/class/leds/$RED_LED/trigger
+# Set to nice blinking, defaults are often heartbeat and off.
+echo "activity" >/sys/class/leds/$GR_LED/trigger
+echo "heartbeat" >/sys/class/leds/$RED_LED/trigger

@@ -19,24 +19,27 @@ ln -s ~/.platformio/penv/bin/piodebuggdb ~/.local/bin/piodebuggdb
 pio --version
 
 add_rc 'export PATH=$PATH:$HOME/.local/bin'
+
+curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/system/99-platformio-udev.rules | sudo tee /etc/udev/rules.d/99-platformio-udev.rules
+
 # Install picotool for the Raspberry Pi Pico
 sudo apt install gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib build-essential pkg-config libusb-1.0-0-dev cmake -y
 
 # Remove newlib versions that are not compatible with the pico or pico2, otherwise it takes 2GB of space
 cd /usr/lib/arm-none-eabi/newlib/thumb || true
-rm -rf v8-a* || true
-rm -rf v7* || true
+sudo rm -rf v8-a* || true
+sudo rm -rf v7* || true
 
 cd $MIRTE_SRC_DIR || exit 1
 mkdir pico/
 cd pico/ || exit 1
-git clone https://github.com/raspberrypi/pico-sdk.git --recursive # somehow needed for picotool
+git clone https://github.com/raspberrypi/pico-sdk.git --recursive --depth=1 # somehow needed for picotool
 ls
 realpath pico-sdk
 ls
 export PICO_SDK_PATH=$MIRTE_SRC_DIR/pico/pico-sdk
 add_rc "export PICO_SDK_PATH=$MIRTE_SRC_DIR/pico/pico-sdk"
-git clone https://github.com/raspberrypi/picotool.git
+git clone https://github.com/raspberrypi/picotool.git --depth=1 # shallow clone to save space
 cd picotool || exit 1
 sudo cp udev/99-picotool.rules /etc/udev/rules.d/
 
