@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd pam || exit
-wget https://apt.kitware.com/kitware-archive.sh
+wget https://apt.kitware.com/kitware-archive.sh --no-check-certificate
 chmod +x kitware-archive.sh
 sudo ./kitware-archive.sh
 rm kitware-archive.sh
