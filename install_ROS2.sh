@@ -56,6 +56,7 @@ ln -s $MIRTE_SRC_DIR/mirte-ros-packages .
 
 # if mirte-ros-packages is from main or develop, use the precompiled version, otherwise compile on-device
 cd $MIRTE_SRC_DIR/mirte-ros-packages
+git submodule update --init --recursive
 branch=$(git rev-parse --abbrev-ref HEAD)
 arch=$(dpkg --print-architecture)
 ubuntu_version=$(lsb_release -cs)
