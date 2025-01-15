@@ -70,7 +70,7 @@ if [[ $branch == "develop" || $branch == "main" ]]; then
 
 	echo "Using precompiled version of mirte-ros-packages"
 	cd /home/mirte/mirte_ws/src/mirte-ros-packages || exit 1
-	ignore=(mirte_telemetrix_cpp mirte_msgs mirte_teleop mirte_base_control mirte_control)
+	ignore=(mirte_telemetrix_cpp mirte_msgs mirte_teleop mirte_control/mirte_master_base_control mirte_control/mirte_master_arm_control mirte_control/mirte_pioneer_control)
 	packages=''
 	for i in "${ignore[@]}"; do
 		touch $i/COLCON_IGNORE
