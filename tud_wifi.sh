@@ -7,16 +7,15 @@ wifi_dev="wlan0"
 echo "$ssid Wi-Fi Setup"
 set -e
 
-trim()
-{
-    local trimmed="$1"
+trim() {
+	local trimmed="$1"
 
-    # Strip leading space.
-    trimmed="${trimmed## }"
-    # Strip trailing space.
-    trimmed="${trimmed%% }"
+	# Strip leading space.
+	trimmed="${trimmed## }"
+	# Strip trailing space.
+	trimmed="${trimmed%% }"
 
-    echo "$trimmed"
+	echo "$trimmed"
 }
 
 # curr_netw="$(iwgetid -r)" || true # doesn't work for hotspots
