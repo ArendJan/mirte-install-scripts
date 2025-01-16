@@ -8,7 +8,7 @@ ssid="TUD-facility"
 # for file in $ssid/ try to decrypt
 for file in $ssid/*.enc; do
 	# decrypt file
-	(openssl enc -d -nosalt -aes256 -k "pass:$seed$mac" -in "$file" -out "$ssid/found.txt" > /dev/null 2>&1) && found=true  || true
+	(openssl enc -d -nosalt -aes256 -k "pass:$seed$mac" -in "$file" -out "$ssid/found.txt" >/dev/null 2>&1) && found=true || true
 	if [ "$found" = true ]; then
 		# get password
 		password=$(cat "$ssid/found.txt")
