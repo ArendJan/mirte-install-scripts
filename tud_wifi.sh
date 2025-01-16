@@ -7,8 +7,23 @@ wifi_dev="wlan0"
 echo "$ssid Wi-Fi Setup"
 set -e
 
+trim()
+{
+    local trimmed="$1"
+
+    # Strip leading space.
+    trimmed="${trimmed## }"
+    # Strip trailing space.
+    trimmed="${trimmed%% }"
+
+    echo "$trimmed"
+}
+
+# curr_netw="$(iwgetid -r)" || true # doesn't work for hotspots
+curr_netw="$(iw dev wlan0 info | grep ssid | awk '!($1="")')" || true # todo: fix for spaces in front
+curr_netw=$(trim "$curr_netw")
 # if already connected to $ssid, show ip and done
-if [ "$(iwgetid -r)" == "$ssid" ]; then
+if [ "$curr_netw" == "$ssid" ]; then
 	echo "Already connected to $ssid"
 	echo "IP: $(ip addr show $wifi_dev | grep -Po 'inet \K[\d.]+')"
 	exit 0
@@ -22,19 +37,12 @@ echo "MAC (for registering online): $mac"
 echo "Please enter the password for $ssid:"
 read password
 
-# trim $password
-# password=
-
-# try to connect to $ssid
-curr_netw="$(iwgetid -r)" || true
-
 # if curr_netw is not empty, set it down
-
 if [ -n "$curr_netw" ]; then
 	nmcli c down "$curr_netw" || true
 fi
 
-nmcli d wifi rescan
+nmcli d wifi rescan || true
 sleep 10
 
 # Check if the desired SSID is in the list of available networks
