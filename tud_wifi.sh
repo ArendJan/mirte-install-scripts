@@ -1,9 +1,9 @@
 #!/bin/bash
-if [ "$1" == "" ]; then
-	echo "start screen"
-	screen "$0" screen
-	exit 0
-fi
+
+# This script is used to connect to a Wi-Fi network using nmcli.
+# It will prompt the user for the password, restart the script with nohup and the password as arguments.
+# This allows the script to be started from a wifi network that is disconnected from when the new network is connected.
+# The script will reconnect to the original network if the connection to the new network fails.
 
 ssid="TUD-facility"
 # ssid="RoboHouse Gasten"
@@ -31,50 +31,67 @@ curr_netw=$(trim "$curr_netw")
 if [ "$curr_netw" == "$ssid" ]; then
 	echo "Already connected to $ssid"
 	echo "IP: $(ip addr show $wifi_dev | grep -Po 'inet \K[\d.]+')"
-	"$local_folder/blink.sh" "$(ip addr show "$wifi_dev" | grep -Po 'inet \K[\d.]+')" &
+	sudo pkill -f "$local_folder/blink.sh" || true
+	sudo "$local_folder/blink.sh" "$(ip addr show "$wifi_dev" | grep -Po 'inet \K[\d.]+')" &
 	exit 0
 fi
 
-# show mac for online portal
-mac=$(ip addr show "$wifi_dev" | awk '/ether/{print $2}')
-echo "MAC (for registering online): $mac"
+if [ "$1" == "" ]; then
+	# show mac for online portal
+	mac=$(ip addr show "$wifi_dev" | awk '/ether/{print $2}')
+	echo "MAC (for registering online): $mac"
 
-# wait for wifi password input
-echo "Please enter the password for $ssid:"
-read password
+	# wait for wifi password input
+	echo "Please enter the password for $ssid:"
+	read password
 
-# if curr_netw is not empty, set it down
-if [ -n "$curr_netw" ]; then
-	nmcli c down "$curr_netw" || true
-fi
+	# run rest of script in nohup
+	nohup "$0" "$ssid" "$password" >/tmp/wifi.txt 2>&1 &
+	nohup_pid=$!
+	tail -f /tmp/wifi.txt &
+	tail_pid=$!
+	wait $nohup_pid
+	kill $tail_pid
+	exit 0
+else
+	ssid="$1"
+	password="$2"
 
-nmcli d wifi rescan || true
-sleep 10
-
-# Check if the desired SSID is in the list of available networks
-if ! nmcli d wifi list | grep -q "$ssid"; then
-	echo "$ssid not found in the list of available networks."
+	# if curr_netw is not empty, set it down
 	if [ -n "$curr_netw" ]; then
-		echo "Reconnecting to the previous network: $curr_netw"
-		nmcli c up "$curr_netw" || true
+		nmcli c down "$curr_netw" || true
 	fi
-	exit 1
+
+	nmcli d wifi rescan || true
+	sleep 10
+
+	# Check if the desired SSID is in the list of available networks
+	if ! nmcli d wifi list | grep -q "$ssid"; then
+		echo "$ssid not found in the list of available networks."
+		if [ -n "$curr_netw" ]; then
+			echo "Reconnecting to the previous network: $curr_netw"
+			nmcli c up "$curr_netw" || true
+		fi
+		exit 1
+	fi
+
+	nmcli c delete "$ssid" || true # delete old connection
+
+	if ! sudo nmcli d wifi c "$ssid" password "$password"; then
+		echo "Unable to connect to $ssid, check the MAC and password and try again."
+		nmcli c up "$curr_netw" || true
+		exit 1
+	fi
+
+	if [ "$(iwgetid -r)" != "$ssid" ]; then
+		echo "Failed to connect to $ssid, check MAC and password and retry."
+		nmcli c up "$curr_netw" || true
+		exit 1
+	fi
+
+	echo "Connected to $ssid!"
+	echo "IP: $(ip addr show "$wifi_dev" | grep -Po 'inet \K[\d.]+')"
+	sudo pkill "blink.sh" || true
+	sudo "$local_folder/blink.sh" "$(ip addr show "$wifi_dev" | grep -Po 'inet \K[\d.]+')" &
+	exit 0
 fi
-
-nmcli c delete "$ssid" || true # delete old connection
-
-if ! sudo nmcli d wifi c "$ssid" password "$password"; then
-	echo "Unable to connect to $ssid, check the MAC and password and try again."
-	exit 1
-fi
-
-if [ "$(iwgetid -r)" != "$ssid" ]; then
-	echo "Failed to connect to $ssid, check MAC and password and retry."
-	exit 1
-fi
-
-echo "Connected to $ssid!"
-echo "IP: $(ip addr show "$wifi_dev" | grep -Po 'inet \K[\d.]+')"
-
-"$local_folder/blink.sh" "$(ip addr show "$wifi_dev" | grep -Po 'inet \K[\d.]+')" &
-exit 0
