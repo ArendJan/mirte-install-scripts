@@ -1,4 +1,9 @@
 #!/bin/bash
+if [ "$1" == "" ]; then
+	echo "start screen"
+	screen "$0" screen
+	exit 0
+fi
 
 ssid="TUD-facility"
 # ssid="RoboHouse Gasten"
@@ -17,6 +22,7 @@ trim() {
 
 	echo "$trimmed"
 }
+local_folder=$(dirname "$0")
 
 # curr_netw="$(iwgetid -r)" || true # doesn't work for hotspots
 curr_netw="$(iw dev wlan0 info | grep ssid | awk '!($1="")')" || true # todo: fix for spaces in front
@@ -25,6 +31,7 @@ curr_netw=$(trim "$curr_netw")
 if [ "$curr_netw" == "$ssid" ]; then
 	echo "Already connected to $ssid"
 	echo "IP: $(ip addr show $wifi_dev | grep -Po 'inet \K[\d.]+')"
+	"$local_folder/blink.sh" "$(ip addr show "$wifi_dev" | grep -Po 'inet \K[\d.]+')" &
 	exit 0
 fi
 
@@ -69,4 +76,5 @@ fi
 echo "Connected to $ssid!"
 echo "IP: $(ip addr show "$wifi_dev" | grep -Po 'inet \K[\d.]+')"
 
+"$local_folder/blink.sh" "$(ip addr show "$wifi_dev" | grep -Po 'inet \K[\d.]+')" &
 exit 0
