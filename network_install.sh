@@ -24,11 +24,13 @@ sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
 MY_ARCH=$(arch)
 if [[ "$MY_ARCH" == "armv7l" ]]; then MY_ARCH="rpi"; fi
 # TODO: This version is from Feb 20, 2023 maybe upgrade soon...
-wget "https://github.com/balena-os/wifi-connect/releases/download/v4.11.1/wifi-connect-v4.11.1-linux-$(echo "$MY_ARCH").zip"
-unzip wifi-connect*
-sudo mv wifi-connect /usr/local/sbin
-rm wifi-connect*
-
+# skip if amd64
+if [[ "$MY_ARCH" != "x86_64" ]]; then
+	wget "https://github.com/balena-os/wifi-connect/releases/download/v4.11.1/wifi-connect-v4.11.1-linux-$(echo "$MY_ARCH").zip"
+	unzip wifi-connect*
+	sudo mv wifi-connect /usr/local/sbin
+	rm wifi-connect*
+fi
 # Added systemd service to account for fix: https://askubuntu.com/questions/472794/hostapd-error-nl80211-could-not-configure-driver-mode
 sudo rm /lib/systemd/system/mirte-ap.service || true
 sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-ap.service /lib/systemd/system/
