@@ -4,12 +4,13 @@ set -x
 . /home/mirte/mirte_ws/install/setup.bash
 SECONDS=0
 WARN_LVL=0
+mirte_space=$(cat /etc/hostname | tr '[:upper:]' '[:lower:]' | tr '-' '_')
 while true; do
 	OK=false
 
 	# echo "topics"
 	percentage=$(
-		(ros2 topic echo /mirte/power/power_watcher --once | grep percentage | tail -1) &
+		(ros2 topic echo /$mirte_space/io/power/power_watcher --once | grep percentage | tail -1) &
 		pid=$!
 		(sleep 5 && kill -9 $pid) 2>/dev/null &
 		watcher=$!

@@ -56,6 +56,7 @@ ln -s $MIRTE_SRC_DIR/mirte-ros-packages .
 
 # if mirte-ros-packages is from main or develop, use the precompiled version, otherwise compile on-device
 cd $MIRTE_SRC_DIR/mirte-ros-packages
+git submodule update --init --recursive
 branch=$(git rev-parse --abbrev-ref HEAD)
 arch=$(dpkg --print-architecture)
 ubuntu_version=$(lsb_release -cs)
@@ -69,7 +70,7 @@ if [[ $branch == "develop" || $branch == "main" ]]; then
 
 	echo "Using precompiled version of mirte-ros-packages"
 	cd /home/mirte/mirte_ws/src/mirte-ros-packages || exit 1
-	ignore=(mirte_telemetrix_cpp mirte_msgs mirte_teleop mirte_base_control mirte_control)
+	ignore=(mirte_telemetrix_cpp mirte_msgs mirte_teleop) # mirte_control/mirte_master_base_control mirte_control/mirte_master_arm_control mirte_control/mirte_pioneer_control # TODO: this doesn't work with subfolders
 	packages=''
 	for i in "${ignore[@]}"; do
 		touch $i/COLCON_IGNORE
@@ -82,7 +83,7 @@ if [[ $branch == "develop" || $branch == "main" ]]; then
 	echo "deb [trusted=yes] $github_url/raw/ros_mirte_${ROS_NAME}_${ubuntu_version}_${arch}/ ./" | sudo tee /etc/apt/sources.list.d/mirte-ros-packages.list
 	echo "yaml $github_url/raw/ros_mirte_${ROS_NAME}_${ubuntu_version}_${arch}/local.yaml ${ROS_NAME}" | sudo tee /etc/ros/rosdep/sources.list.d/mirte-ros-packages.list
 	sudo apt update
-	sudo apt install -y $packages || fallback=true
+	sudo apt install -y -m $packages || fallback=false # TODO: disabled fallback for now as mirte-arm doesn't compile.
 fi
 
 if $fallback; then
