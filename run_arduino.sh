@@ -64,7 +64,7 @@ elif [[ $COMMAND == upload* ]]; then
 	elif test "$1" == "upload_pico"; then
 		buildpico
 		# This will always upload telemetrix4rpipico.uf2, so no need to pass a file
-		sudo picotool load -f $MIRTE_SRC_DIR/mirte-telemetrix4rpipico/Telemetrix4RpiPico.uf2
+		sudo picotool load -f $MIRTE_SRC_DIR/mirte-telemetrix4rpipico/build/Telemetrix4RpiPico.uf2
 		retVal=$?
 		if [ $retVal -ne 0 ]; then
 			echo "Failed to upload to Pico"
