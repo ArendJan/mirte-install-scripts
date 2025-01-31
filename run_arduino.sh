@@ -35,6 +35,13 @@ buildpico() {
 	make
 }
 
+upload_pico_uart() {
+	# for each port in /dev/serial/by-id
+	# try to upload 
+	# send reboot command
+	# run pico upload
+}
+
 # Different build scripts
 if [[ $COMMAND == build* ]]; then
 	if test "$COMMAND" == "build"; then
@@ -64,10 +71,12 @@ elif [[ $COMMAND == upload* ]]; then
 	elif test "$1" == "upload_pico"; then
 		buildpico
 		# This will always upload telemetrix4rpipico.uf2, so no need to pass a file
-		sudo picotool load -f $MIRTE_SRC_DIR/mirte-telemetrix4rpipico/build/Telemetrix4RpiPico.uf2
-		retVal=$?
-		if [ $retVal -ne 0 ]; then
-			echo "Failed to upload to Pico"
+		ERR=false
+		sudo picotool load -f $MIRTE_SRC_DIR/mirte-telemetrix4rpipico/build/Telemetrix4RpiPico_combinedf.uf2 || ERR=true
+		echo $ERR
+		if [ $ERR ]; then
+			echo "Failed to upload to Pico using picotool"
+			upload_pico_uart
 			echo "Please check the connection and try again"
 			echo "Or unplug the Pico, press the BOOTSEL button and plug it in again"
 			exit 1
