@@ -51,7 +51,8 @@ sudo make install
 
 cd $MIRTE_SRC_DIR/mirte-telemetrix4rpipico || exit 1
 git submodule update --init --recursive
-pip install -U "pip>=25" # pico-py-serial-flash requires a newer version of pip, otherwise it'll be installed as UNKNOWN package
+
+pip install -U "pip>=25"                                                 # pico-py-serial-flash requires a newer version of pip, otherwise it'll be installed as UNKNOWN package
 pip install git+https://github.com/arendjan/pico-py-serial-flash.git@cli # uart flashing utility when using the pcb
 
 cd $MIRTE_SRC_DIR/mirte-install-scripts/

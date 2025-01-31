@@ -41,9 +41,9 @@ upload_pico_uart() {
 		port=$(realpath $port)
 		# send reboot command
 		stty 115200 -F $port
-		echo -ne '\x01\x25' > $port # 1 byte message, message id 0x25==reset_to_bootloader
+		echo -ne '\x01\x25' >$port # 1 byte message, message id 0x25==reset_to_bootloader
 		sleep 1
-		# try to upload 
+		# try to upload
 		ERR=false
 		pico_py_serial_flasher $port $MIRTE_SRC_DIR/mirte-telemetrix4rpipico/build/Telemetrix4RpiPico_combined.elf || ERR=true
 		if $ERR; then
