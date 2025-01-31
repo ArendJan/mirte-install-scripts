@@ -28,7 +28,7 @@ unzip wifi-connect*
 sudo mv wifi-connect /usr/local/sbin
 rm wifi-connect*
 # just don't update dns or anything. Just use 8.8.8.8, as set in network_setup.sh
-sed -i '/\[main\]/a \ndns=none\nrc-manager=unmanaged' /etc/NetworkManager/NetworkManager.conf
+# sed -i '/\[main\]/a \ndns=none\nrc-manager=unmanaged' /etc/NetworkManager/NetworkManager.conf
 
 # Added systemd service to account for fix: https://askubuntu.com/questions/472794/hostapd-error-nl80211-could-not-configure-driver-mode
 sudo rm /lib/systemd/system/mirte-ap.service || true

@@ -76,8 +76,8 @@ function check_connection {
 	if sudo nmcli con show --active | grep wlan0; then
 		# Bugfix (see network_install.sh)
 		# sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
-		sudo rm -rf /etc/resolv.conf
-		sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
+		# sudo rm -rf /etc/resolv.conf
+		# sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
 
 		printf 'Connected to wifi connection:'
 		nmcli con show --active | grep wlan0

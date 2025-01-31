@@ -112,3 +112,5 @@ sudo apt install -y overlayroot
 # Currently only instaling, not enabled, sd-image will enable it
 # remove force ipv4
 sudo rm /etc/apt/apt.conf.d/99force-ipv4 || true
+
+sudo rm /etc/resolv.conf || true # remove resolv.conf to use the one from the network.
