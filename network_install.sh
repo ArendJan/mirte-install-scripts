@@ -1,6 +1,8 @@
 #!/bin/bash
 set -xe
 MIRTE_SRC_DIR=/usr/local/src/mirte
+sudo rm -rf /etc/resolv.conf
+sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
 
 # Make sure there are no conflicting hcdp-servers
 sudo apt install -y dnsmasq-base
@@ -16,8 +18,6 @@ sudo apt purge -y ifupdown
 # Fix for bug in systemd-resolved
 # (https://askubuntu.com/questions/973017/wrong-nameserver-set-by-resolvconf-and-networkmanager)
 # For the installation we need 8.8.8.8, but linking will be done in network_setup.sh
-sudo rm -rf /etc/resolv.conf
-sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
 
 # Install wifi-connect
 MY_ARCH=$(arch)
@@ -90,3 +90,5 @@ sudo chmod 777 /etc/hostname
 # panic the kernel (at boot). Instead of waiting an unkown
 # time and reboot manually, we will reboot automatically
 sudo bash -c 'echo "kernel.panic = 10" > /etc/sysctl.conf'
+
+rm -rf /etc/resolv.conf || true
