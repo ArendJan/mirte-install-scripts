@@ -1,4 +1,5 @@
 #!/bin/bash
+# set -xe
 #TODO: script should have format ./run.sh build|upload] mcu_type
 COMMAND=$1
 
@@ -31,15 +32,28 @@ buildpico() {
 	cd $MIRTE_SRC_DIR/mirte-telemetrix4rpipico || exit 1
 	# shellcheck disable=SC2164
 	mkdir -p build && cd build
-	cmake .. -DCMAKE_BUILD_TYPE=Release
+	cmake .. -DCMAKE_BUILD_TYPE=Debug
 	make
 }
 
 upload_pico_uart() {
-	# for each port in /dev/serial/by-id
-	# try to upload 
-	# send reboot command
-	# run pico upload
+	for port in /dev/serial/by-id/*; do # these are only the usb serial ports, not all the other uart ports.
+		port=$(realpath $port)
+		# send reboot command
+		stty 115200 -F $port
+		echo -ne '\x01\x25' > $port # 1 byte message, message id 0x25==reset_to_bootloader
+		sleep 1
+		# try to upload 
+		ERR=false
+		pico_py_serial_flasher $port $MIRTE_SRC_DIR/mirte-telemetrix4rpipico/build/Telemetrix4RpiPico_combined.elf || ERR=true
+		if $ERR; then
+			echo "Failed to upload to Pico using pico_py_serial_flash port $port"
+		else
+			echo "Successfully uploaded to Pico using pico_py_serial_flash port $port"
+			return 0
+		fi
+	done
+	return 1
 }
 
 # Different build scripts
@@ -72,16 +86,20 @@ elif [[ $COMMAND == upload* ]]; then
 		buildpico
 		# This will always upload telemetrix4rpipico.uf2, so no need to pass a file
 		ERR=false
-		sudo picotool load -f $MIRTE_SRC_DIR/mirte-telemetrix4rpipico/build/Telemetrix4RpiPico_combinedf.uf2 || ERR=true
-		echo $ERR
-		if [ $ERR ]; then
-			echo "Failed to upload to Pico using picotool"
+		sudo picotool load -f $MIRTE_SRC_DIR/mirte-telemetrix4rpipico/build/Telemetrix4RpiPico_combined.uf2 || ERR=true
+		sleep 1
+		sudo picotool reboot || true # just to make sure, sometimes it does not reboot automatically
+		if $ERR; then
+			echo "Failed to upload to Pico using picotool, trying using uart"
 			upload_pico_uart
-			echo "Please check the connection and try again"
-			echo "Or unplug the Pico, press the BOOTSEL button and plug it in again"
-			exit 1
+			FAILED=$?
+			if [ $FAILED -eq 1 ]; then
+				echo "Failed to upload using uart."
+				echo "Please check the connection and try again"
+				echo "Or unplug the Pico, press the BOOTSEL button and plug it in again"
+				exit 1
+			fi
 		fi
-		sudo picotool reboot # just to make sure, sometimes it does not reboot automatically
 	else
 		echo "Unknown upload command $COMMAND"
 		exit 1
