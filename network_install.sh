@@ -7,7 +7,7 @@ sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
 # Make sure there are no conflicting hcdp-servers
 sudo apt install -y dnsmasq-base
 systemctl disable hostapd
-sed -i 's/#DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf
+# sed -i 's/#DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf # CHECK of dit niet dns stuk maakt tijdens gewone boot met wifi verbinding
 
 # Install netplan (not installed on armbian) and networmanager (not installed by Raspberry)
 sudo apt install -y netplan.io
