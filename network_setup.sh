@@ -133,12 +133,13 @@ MIRTE_SRC_DIR=/usr/local/src/mirte
 # This must be run every time on boot, since it should
 # be generated on first boot (so not when generating
 # the image in network_setup.sh)
-if [ ! -f /etc/ssid ] || [[ $(cat /etc/hostname) == "Mirte-XXXXXX" ]]; then
+mac=$(ip addr show "wlan0" | awk '/ether/{print $2}')
+UNIQUE_ID=$(echo -n $mac | tr -cd "1-9A-Fa-f" | tail -c 6) # last 6 characters of mac address, without colons or 0s
+MIRTE_SSID="Mirte-$(echo ${UNIQUE_ID^^})"
+echo "Generated SSID: $MIRTE_SSID"
+
+if [ ! -f /etc/ssid ] || [[ $(cat /etc/hostname) == "Mirte-XXXXXX" ]] || [[ $(cat /etc/hostname) != $MIRTE_SSID ]]; then
 	# UNIQUE_ID=$(tr -cd "1-9A-F" </dev/urandom | head -c 6)
-	mac=$(ip addr show "wlan0" | awk '/ether/{print $2}')
-	UNIQUE_ID=$(echo -n $mac | tr -cd "1-9A-Fa-f" | tail -c 6) # last 6 characters of mac address, without colons or 0s
-	MIRTE_SSID="Mirte-$(echo ${UNIQUE_ID^^})"
-	echo "Generated SSID: $MIRTE_SSID"
 	sudo bash -c 'echo '$MIRTE_SSID' > /etc/hostname'
 	sudo ln -s /etc/hostname /etc/ssid
 	# And add them to the hosts file
