@@ -165,7 +165,7 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	source ./install/setup.bash
 	cd src/ros2_astra_camera/astra_camera
 	chmod +x ./scripts/install.sh || true
-	./scripts/install.sh || true
+	sudo ./scripts/install.sh || true
 	sudo udevadm control --reload && sudo udevadm trigger
 	cd ../../rplidar_ros
 	chmod +x ./scripts/create_udev_rules.sh || true
