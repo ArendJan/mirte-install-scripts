@@ -17,5 +17,5 @@ source /home/mirte/mirte_ws/install/setup.bash
 # 	echo "ROS_MASTER_URI=$ROS_MASTER_URI"
 # fi
 # If the robot user wants to add their own config:
-# source /home/mirte/.bashrc
+source /home/mirte/.bashrc
 ros2 launch mirte_bringup $LAUNCH_FILE.launch.py
