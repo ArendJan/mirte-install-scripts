@@ -41,16 +41,16 @@ pip install gpiod==1.5.4 # python3.8 version
 pip install gtts playsound openai==0.28.0 sounddevice scipy SpeechRecognition soundfile transformers datasets pyyaml pydub Elevenlabs || true # some strange package versions
 pip install numpy==1.23.1                                                                                                                     # python3.8 fix
 
-mkdir ~/uboot_fix/
-cd ~/uboot_fix/
-# audio fix uboot for orange pi 3b
-if [[ ${type:=""} == "mirte_orangepi3b" ]]; then
-	wget https://mirte.arend-jan.com/files/fixes/uboot/linux-u-boot-orangepi3b-edge_24.2.1_arm64__2023.10-S095b-P0000-H264e-V49ed-B11a8-R448a.deb
-	sudo apt install ./linux-u-boot-orangepi3b-edge_24.2.1_arm64__2023.10-S095b-P0000-H264e-V49ed-B11a8-R448a.deb
-	rm linux-u-boot-orangepi3b-edge_24.2.1_arm64__2023.10-S095b-P0000-H264e-V49ed-B11a8-R448a.deb
-	cd ../
-	rm -rf uboot_fix/
-fi
+# mkdir ~/uboot_fix/
+# cd ~/uboot_fix/
+# # audio fix uboot for orange pi 3b
+# if [[ ${type:=""} == "mirte_orangepi3b" ]]; then
+# 	wget https://mirte.arend-jan.com/files/fixes/uboot/linux-u-boot-orangepi3b-edge_24.2.1_arm64__2023.10-S095b-P0000-H264e-V49ed-B11a8-R448a.deb
+# 	sudo apt install ./linux-u-boot-orangepi3b-edge_24.2.1_arm64__2023.10-S095b-P0000-H264e-V49ed-B11a8-R448a.deb
+# 	rm linux-u-boot-orangepi3b-edge_24.2.1_arm64__2023.10-S095b-P0000-H264e-V49ed-B11a8-R448a.deb
+# 	cd ../
+# 	rm -rf uboot_fix/
+# fi
 
 # cd ~/mirte_ws/src
 # git clone --recurse-submodules https://github.com/arendjan/mirte-telemetrix-cpp.git

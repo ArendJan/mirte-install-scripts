@@ -45,7 +45,7 @@ upload_pico_uart() {
 		sleep 1
 		# try to upload
 		ERR=false
-		pico_py_serial_flasher $port $MIRTE_SRC_DIR/mirte-telemetrix4rpipico/build/Telemetrix4RpiPico_combined.elf || ERR=true
+		pico_py_serial_flasher $port $MIRTE_SRC_DIR/mirte-telemetrix4rpipico/build/Telemetrix4RpiPico.elf || ERR=true
 		if $ERR; then
 			echo "Failed to upload to Pico using pico_py_serial_flash port $port"
 		else
