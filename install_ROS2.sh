@@ -29,7 +29,7 @@ else
 	exit 1
 fi
 
-sudo apt install -y ros-$ROS_NAME-ros-base
+sudo apt install -y ros-$ROS_NAME-ros-base ros-$ROS_NAME-zenoh-bridge-dds ros-$ROS_NAME-rmw-zenoh-cpp
 sudo apt install -y ros-$ROS_NAME-xacro
 sudo apt install -y ros-dev-tools
 
