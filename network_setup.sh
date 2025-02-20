@@ -138,7 +138,7 @@ UNIQUE_ID=$(echo -n $mac | tr -cd "1-9A-Fa-f" | tail -c 6) # last 6 characters o
 MIRTE_SSID="Mirte-$(echo ${UNIQUE_ID^^})"
 echo "Generated SSID: $MIRTE_SSID"
 
-if [ ! -f /etc/ssid ] || [[ $(cat /etc/hostname) == "Mirte-XXXXXX" ]] || [[ $(cat /etc/hostname) != $MIRTE_SSID ]]; then
+if [ ! -f /etc/ssid ] || [[ $(cat /etc/hostname) == "Mirte-XXXXXX" ]] || [[ "$(cat /etc/hostname)" != "$MIRTE_SSID" ]]; then
 	# UNIQUE_ID=$(tr -cd "1-9A-F" </dev/urandom | head -c 6)
 	sudo bash -c 'echo '$MIRTE_SSID' > /etc/hostname'
 	sudo ln -s /etc/hostname /etc/ssid
