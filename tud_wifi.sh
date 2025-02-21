@@ -36,7 +36,7 @@ if [ "$curr_netw" == "$ssid" ]; then
 	exit 0
 fi
 
-if [ "$1" == "" ]; then 
+if [ "$1" == "" ]; then
 	ret=0
 	$local_folder/check_mac.sh true || ret=$?
 	# ask user that they checked it if exit code is 1
