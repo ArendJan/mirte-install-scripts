@@ -25,7 +25,7 @@ trim() {
 local_folder=$(dirname "$0")
 
 # curr_netw="$(iwgetid -r)" || true # doesn't work for hotspots
-curr_netw="$(iw dev wlan0 info | grep ssid | awk '!($1="")')" || true # todo: fix for spaces in front
+curr_netw="$(iw dev $wifi_dev info | grep ssid | awk '!($1="")')" || true
 curr_netw=$(trim "$curr_netw")
 # if already connected to $ssid, show ip and done
 if [ "$curr_netw" == "$ssid" ]; then
@@ -36,7 +36,14 @@ if [ "$curr_netw" == "$ssid" ]; then
 	exit 0
 fi
 
-if [ "$1" == "" ]; then
+if [ "$1" == "" ]; then 
+	ret=0
+	$local_folder/check_mac.sh true || ret=$?
+	# ask user that they checked it if exit code is 1
+	if [ $ret -eq 1 ]; then
+		echo "Did you post it on BrightSpace and got confirmation that it was configured for you?"
+		read -p "Press enter to continue, ctrl-c to exit"
+	fi
 	# show mac for online portal
 	mac=$(ip addr show "$wifi_dev" | awk '/ether/{print $2}')
 	echo "MAC (for registering online): $mac"
