@@ -42,6 +42,8 @@ function start_acces_point {
 	nmcli con modify "$(cat /etc/hostname)" 802-11-wireless-security.proto wpa
 	#    nmcli con modify `cat /etc/hostname` 802-11-wireless-security.group ccmp
 	#    nmcli con modify `cat /etc/hostname` 802-11-wireless-security.pairwise ccmp
+	# generate a random channel, can even change to 5Ghz if wanted, then check how to find a correct channel
+	nmcli c modify "$(cat /etc/hostname)" 802-11-wireless.band bg 802-11-wireless.channel "$(shuf -i 1-11 -n 1)"
 	nmcli con down "$(cat /etc/hostname)"
 	sleep 10
 	nmcli con up "$(cat /etc/hostname)"
