@@ -6,31 +6,19 @@ repositories:
   mirte-telemetrix4arduino:
     type: git
     url: https://github.com/mirte-robot/Telemetrix4Arduino.git
-    version: master
+    version: develop
   mirte-install-scripts:
     type: git
-    url: https://github.com/mirte-robot/mirte-install-scripts.git
+    url: https://github.com/arendjan/mirte-install-scripts.git
     version: develop
-  # mirte-telemetrix-aio:
-  #   type: git
-  #   url: https://github.com/mirte-robot/telemetrix-aio.git
-  #   version: master
-  # mirte-tmx-pico-aio:
-  #   type: git
-  #   url: https://github.com/arendjan/tmx-pico-aio.git
-  #   version: modules
   mirte-ros-packages:
     type: git
-    url: https://github.com/mirte-robot/mirte-ros-packages.git
+    url: https://github.com/arendjan/mirte-ros-packages.git
     version: develop
     recursive: true
   mirte-oled-images:
     type: git
     url: https://github.com/mirte-robot/mirte-oled-images.git
-    version: main
-  mirte-arduino-libraries:
-    type: git
-    url: https://github.com/mirte-robot/mirte-arduino-libraries.git
     version: main
   mirte-python:
     type: git
@@ -43,9 +31,5 @@ repositories:
   mirte-telemetrix4rpipico:
     type: git
     url: https://github.com/mirte-robot/Telemetrix4RpiPico.git
+    recursive: true
     version: develop
-  # mirte-telemetrix-cpp:
-  #   type: git
-  #   url: https://github.com/mirte-robot/mirte-telemetrix-cpp.git
-  #   version: mirte-pioneer
-    

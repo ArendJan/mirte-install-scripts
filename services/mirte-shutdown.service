@@ -3,6 +3,7 @@ Description=Mirte-shutdown
 After=mirte-ros.service
 
 [Service]
+User=mirte
 Type=oneshot
 RemainAfterExit=true
 ExecStart=/usr/local/src/mirte/mirte-install-scripts/services/mirte_boot.sh

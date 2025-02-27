@@ -8,7 +8,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - run: |
+    - shell: bash
+      run: |
         mkdir -p /etc/udev/rules.d/ # just for testing, folder should just exist on the real image
         sudo useradd -m -s /bin/bash mirte 
         MIRTE_SRC_DIR=/usr/local/src/mirte
@@ -25,15 +26,18 @@ jobs:
         sudo ./install_arduino.sh
 
   ros2-install:
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        type: [mirte, mirte-master]
     steps:
     - uses: actions/checkout@v4
-    - run: |
-        sudo useradd -m -s /bin/bash mirte 
+    - shell: bash
+      run: |
+        echo $0
+        sudo useradd -m -s /bin/bash mirte
         MIRTE_SRC_DIR=/usr/local/src/mirte
         sudo mkdir -p $MIRTE_SRC_DIR
-      
         sudo mkdir $MIRTE_SRC_DIR/mirte-install-scripts/
         sudo cp -r ./* $MIRTE_SRC_DIR/mirte-install-scripts/
         cd $MIRTE_SRC_DIR
@@ -43,4 +47,5 @@ jobs:
         cd $MIRTE_SRC_DIR/mirte-install-scripts/
         sudo sed -i '/systemctl/d' install_ROS2.sh # remove systemctl command as it is not available in the github runner/container
         sudo apt install libunwind-dev -y
-        sudo ./install_ROS2.sh
+        MIRTE_TYPE=${{ matrix.type }}
+        sudo /bin/bash -c "MIRTE_TYPE=${{ matrix.type }} source ./install_ROS2.sh"

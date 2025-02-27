@@ -29,7 +29,7 @@ else
 	exit 1
 fi
 
-sudo apt install -y ros-$ROS_NAME-ros-base
+sudo apt install -y ros-$ROS_NAME-ros-base ros-$ROS_NAME-zenoh-bridge-dds ros-$ROS_NAME-rmw-zenoh-cpp
 sudo apt install -y ros-$ROS_NAME-xacro
 sudo apt install -y ros-dev-tools
 
@@ -56,6 +56,7 @@ ln -s $MIRTE_SRC_DIR/mirte-ros-packages .
 
 # if mirte-ros-packages is from main or develop, use the precompiled version, otherwise compile on-device
 cd $MIRTE_SRC_DIR/mirte-ros-packages
+git submodule update --init --recursive
 branch=$(git rev-parse --abbrev-ref HEAD)
 arch=$(dpkg --print-architecture)
 ubuntu_version=$(lsb_release -cs)
@@ -69,7 +70,7 @@ if [[ $branch == "develop" || $branch == "main" ]]; then
 
 	echo "Using precompiled version of mirte-ros-packages"
 	cd /home/mirte/mirte_ws/src/mirte-ros-packages || exit 1
-	ignore=(mirte_telemetrix_cpp mirte_msgs mirte_teleop mirte_base_control mirte_control)
+	ignore=(mirte_telemetrix_cpp mirte_msgs mirte_teleop) # mirte_control/mirte_master_base_control mirte_control/mirte_master_arm_control mirte_control/mirte_pioneer_control # TODO: this doesn't work with subfolders
 	packages=''
 	for i in "${ignore[@]}"; do
 		touch $i/COLCON_IGNORE
@@ -82,7 +83,7 @@ if [[ $branch == "develop" || $branch == "main" ]]; then
 	echo "deb [trusted=yes] $github_url/raw/ros_mirte_${ROS_NAME}_${ubuntu_version}_${arch}/ ./" | sudo tee /etc/apt/sources.list.d/mirte-ros-packages.list
 	echo "yaml $github_url/raw/ros_mirte_${ROS_NAME}_${ubuntu_version}_${arch}/local.yaml ${ROS_NAME}" | sudo tee /etc/ros/rosdep/sources.list.d/mirte-ros-packages.list
 	sudo apt update
-	sudo apt install -y $packages || fallback=true
+	sudo apt install -y -m $packages || fallback=false # TODO: disabled fallback for now as mirte-arm doesn't compile.
 fi
 
 if $fallback; then
@@ -102,18 +103,19 @@ rosdep install -y --from-paths src/ --ignore-src --rosdistro $ROS_NAME
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
 
 add_rc "source /home/mirte/mirte_ws/install/setup.bash" "source /home/mirte/mirte_ws/install/setup.zsh"
-
+add_rc "export ROS_LOG_DIR=/tmp/ros_log/" # log to tmp to not fill up the disk
 # shellcheck source=/dev/null
 source /home/mirte/mirte_ws/install/setup.bash
 
 # Add systemd service to start ROS nodes
-ROS_SERVICE_NAME=mirte-ros
 if [[ $MIRTE_TYPE == "mirte-master" ]]; then # master version should start a different launch file
-	ROS_SERVICE_NAME=mirte-master-ros
+	# rename the service file to the correct name, otherwise systemctl will error with a "Failed to look up unit file state: Link has been severed" error
+	mv $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-ros.service $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-ros-pioneer.service
+	mv $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-master-ros.service $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-ros.service
 fi
 sudo rm /lib/systemd/system/mirte-ros.service || true
 # uses same service name, but different links. The service file starts mirte_ros with the correct launch file as argument
-sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/$ROS_SERVICE_NAME.service /lib/systemd/system/mirte-ros.service
+sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/services/mirte-ros.service /lib/systemd/system/mirte-ros.service
 sudo systemctl daemon-reload
 sudo systemctl stop mirte-ros || /bin/true
 sudo systemctl start mirte-ros
@@ -140,8 +142,7 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	cd /home/mirte/mirte_ws/src || exit 1
 	git clone https://github.com/Slamtec/rplidar_ros.git -b ros2 # FIXME-FUTURE: Can be installed in newer versions if V2.1.5 is released
 
-	git clone https://github.com/rafal-gorecki/ros2_astra_camera.git -b master # compressed images image transport fixes, fork of orbbec/...
-	# git clone https://github.com/SuperJappie08/ros2_astra_camera.git -b dep-fix # compressed images image transport fixes, fork of orbbec/... # Fork of Fork: Fix dependencies
+	git clone https://github.com/ArendJan/ros2_astra_camera.git -b fix-ros-jammy      # compressed images image transport fixes, fork of orbbec/... with also lazy nodes
 	git clone https://github.com/clearpathrobotics/clearpath_mecanum_drive_controller # FIXME: Can be installed from apt? why build?
 	cd ../../
 	mkdir temp
@@ -163,7 +164,7 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	source ./install/setup.bash
 	cd src/ros2_astra_camera/astra_camera
 	chmod +x ./scripts/install.sh || true
-	./scripts/install.sh || true
+	sudo ./scripts/install.sh || true
 	sudo udevadm control --reload && sudo udevadm trigger
 	cd ../../rplidar_ros
 	chmod +x ./scripts/create_udev_rules.sh || true
