@@ -101,6 +101,8 @@ git clone https://github.com/RobotWebTools/web_video_server.git -b ros2
 cd .. || exit 1
 rosdep install -y --from-paths src/ --ignore-src --rosdistro $ROS_NAME
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+add_rc "export MIRTE_ZENOH=true"
+add_rc "export MIRTE_USE_MULTIROBOT=false"
 
 add_rc "source /home/mirte/mirte_ws/install/setup.bash" "source /home/mirte/mirte_ws/install/setup.zsh"
 add_rc "export ROS_LOG_DIR=/tmp/ros_log/" # log to tmp to not fill up the disk

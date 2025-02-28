@@ -86,7 +86,7 @@ elif [[ $COMMAND == upload* ]]; then
 		buildpico
 		# This will always upload telemetrix4rpipico.uf2, so no need to pass a file
 		ERR=false
-		sudo picotool load -f $MIRTE_SRC_DIR/mirte-telemetrix4rpipico/build/Telemetrix4RpiPico_combined.uf2 || ERR=true
+		sudo picotool load -f $MIRTE_SRC_DIR/mirte-telemetrix4rpipico/build/Telemetrix4RpiPico.uf2 || ERR=true
 		sleep 1
 		sudo picotool reboot || true # just to make sure, sometimes it does not reboot automatically
 		if $ERR; then
