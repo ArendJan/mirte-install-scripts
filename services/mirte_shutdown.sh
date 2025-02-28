@@ -11,5 +11,5 @@ touch /home/mirte/.shutdown
 source /home/mirte/mirte_ws/install/setup.bash
 # TODO: does not work if ros is not running
 
-ros2 service call /mirte/set_middle_image "{ type: 'text', value: 'Shutting down...'}"
+ros2 service call /io/oled/oled/set_text mirte_msgs/srv/SetOLEDText "{ text: 'Shutting down...'}"
 sleep 2
