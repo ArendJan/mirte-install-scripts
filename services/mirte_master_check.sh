@@ -14,7 +14,7 @@ topic=/io/power/power_watcher
 if [ "$MIRTE_USE_MULTIROBOT" = "true" ]; then
 	topic=/$mirte_space/io/power/power_watcher
 fi
-ros2 topic echo $topic sensor_msgs/msg/BatteryState --field percentage > /tmp/batteryState &
+ros2 topic echo $topic sensor_msgs/msg/BatteryState --field percentage >/tmp/batteryState &
 
 while true; do
 	OK=false
@@ -24,7 +24,7 @@ while true; do
 		tail -2 /tmp/batteryState | head -1
 	) || true
 	echo $percentage
-	> /tmp/batteryState
+	true >/tmp/batteryState
 	# percentage=$(echo "$percentage" | tail -1)
 	# echo $percentage
 	# echo $( echo $percentage | wc -c)
@@ -46,7 +46,7 @@ while true; do
 	fi
 	# if there is a time jump and seconds is more than last_seconds+2, reset seconds
 	# time jumps happen when the time is updated (on connecting to wifi)
-	next_second=$((LAST_SECONDS + 2)) 
+	next_second=$((LAST_SECONDS + 2))
 	if [ $SECONDS -gt $next_second ]; then
 		echo "time jump"
 		SECONDS=0
