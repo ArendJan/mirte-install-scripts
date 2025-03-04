@@ -46,7 +46,7 @@ while true; do
 	fi
 	# if there is a time jump and seconds is more than last_seconds+2, reset seconds
 	# time jumps happen when the time is updated (on connecting to wifi)
-	next_second=$((LAST_SECONDS + 2))
+	next_second=$((LAST_SECONDS + 20))
 	if [ $SECONDS -gt $next_second ]; then
 		echo "time jump"
 		SECONDS=0

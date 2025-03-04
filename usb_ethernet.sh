@@ -40,6 +40,9 @@ for USB_PATH in /sys/class/net/usb*; do
 	if [[ $USB == "usb1" ]]; then
 		continue
 	fi
+	if [[ $USB != usb* ]]; then
+		continue
+	fi
 	setup_network_usb $USB $SUBNET
 	((SUBNET += 1))
 done
