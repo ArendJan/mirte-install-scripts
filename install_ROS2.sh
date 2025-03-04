@@ -105,7 +105,7 @@ add_profile "export MIRTE_ZENOH=true"
 add_profile "export MIRTE_USE_MULTIROBOT=false"
 
 add_rc "source /home/mirte/mirte_ws/install/setup.bash" "source /home/mirte/mirte_ws/install/setup.zsh"
-add_rc "export ROS_LOG_DIR=/tmp/ros_log/" # log to tmp to not fill up the disk
+add_profile "export ROS_LOG_DIR=/tmp/ros_log/" # log to tmp to not fill up the disk
 # shellcheck source=/dev/null
 source /home/mirte/mirte_ws/install/setup.bash
 
