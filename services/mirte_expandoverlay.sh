@@ -18,9 +18,10 @@ fi
 DISK_AND_PART=$(realpath /dev/disk/by-label/mirte_root) # always this name
 
 # remove p1 from $DISK_AND_PART
-DISK=$(echo $DISK_AND_PART | sed 's/p.//')
+DISK=/dev/$(lsblk -ndo pkname $DISK_AND_PART)
 
-PART=$(echo $DISK_AND_PART | sed 's/.*p//')
+# get number at end of $DISK_AND_PART
+PART=$(echo $DISK_AND_PART | grep -o '[0-9]*$')
 cat <<EOF | sudo parted ---pretend-input-tty "$DISK" resizepart
 $PART
 y
