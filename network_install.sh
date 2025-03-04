@@ -2,10 +2,16 @@
 set -xe
 MIRTE_SRC_DIR=/usr/local/src/mirte
 
+# Fix for bug in systemd-resolved
+# (https://askubuntu.com/questions/973017/wrong-nameserver-set-by-resolvconf-and-networkmanager)
+# For the installation we need 8.8.8.8, but linking will be done in network_setup.sh
+sudo rm -rf /etc/resolv.conf
+sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
+
 # Make sure there are no conflicting hcdp-servers
 sudo apt install -y dnsmasq-base
 systemctl disable hostapd
-sed -i 's/#DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf
+# sed -i 's/#DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf # TODO: check this
 
 # Install netplan (not installed on armbian) and networmanager (not installed by Raspberry)
 #sudo apt install -y netplan.io
@@ -13,12 +19,6 @@ sudo apt install -y network-manager
 #sudo cp $MIRTE_SRC_DIR/mirte-install-scripts/50-cloud-init.yaml /etc/netplan/
 #sudo netplan apply
 #sudo apt purge -y ifupdown
-
-# Fix for bug in systemd-resolved
-# (https://askubuntu.com/questions/973017/wrong-nameserver-set-by-resolvconf-and-networkmanager)
-# For the installation we need 8.8.8.8, but linking will be done in network_setup.sh
-sudo rm -rf /etc/resolv.conf
-sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
 
 # Install wifi-connect
 MY_ARCH=$(arch)
@@ -63,8 +63,8 @@ sudo apt install -y inotify-tools wireless-tools
 # Disable ssh root login
 sed -i 's/#PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
 
-# Install usb_ethernet script from EV3
-wget https://raw.githubusercontent.com/ev3dev/ev3-systemd/ev3dev-buster/scripts/ev3-usb.sh -P $MIRTE_SRC_DIR/mirte-install-scripts
+# Install usb_ethernet script from EV3 (already downloaded with a fix)
+# wget https://raw.githubusercontent.com/ev3dev/ev3-systemd/ev3dev-buster/scripts/ev3-usb.sh -P $MIRTE_SRC_DIR/mirte-install-scripts
 sudo chmod +x $MIRTE_SRC_DIR/mirte-install-scripts/ev3-usb.sh
 sudo chown mirte:mirte $MIRTE_SRC_DIR/mirte-install-scripts/ev3-usb.sh
 sudo bash -c 'echo "libcomposite" >> /etc/modules'
@@ -84,10 +84,12 @@ sudo bash -c 'echo "Mirte-XXXXXX" > /etc/hostname'
 sudo chmod 777 /etc/hostname
 
 # Fix for wpa_supplicant error
-sudo bash -c "echo 'match-device=driver:wlan0' >> /etc/NetworkManager/NetworkManager.conf"
+# sudo bash -c "echo 'match-device=driver:wlan0' >> /etc/NetworkManager/NetworkManager.conf"
 
 # Reboot after kernel panic
 # The OPi has a fairly unstable wifi driver which might
 # panic the kernel (at boot). Instead of waiting an unkown
 # time and reboot manually, we will reboot automatically
 sudo bash -c 'echo "kernel.panic = 10" > /etc/sysctl.conf'
+
+rm -rf /etc/resolv.conf || true # remove resolv.conf to use the one from the network.

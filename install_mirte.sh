@@ -105,7 +105,7 @@ pip3 install simpleaudio pyttsx3 || true # simpleaudio uses an old python instal
 sudo apt install -y overlayroot
 # Currently only instaling, not enabled
 
-# Install overlayfs (done in sd image tools)
+# Install overlayfs (enabling in sd image tools)
 # Setup expand overlayfs
 {
 	# enable mirte-overlay service
@@ -118,3 +118,4 @@ sudo apt install -y overlayroot
 
 # remove force ipv4
 sudo rm /etc/apt/apt.conf.d/99force-ipv4 || true
+sudo rm /etc/resolv.conf || true # remove resolv.conf to use the one from the network.
