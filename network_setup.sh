@@ -139,7 +139,7 @@ if false; then # when using mac for hostname.
 	UNIQUE_ID=$(echo -n $mac | tr -cd "1-9A-Fa-f" | tail -c 6) # last 6 characters of mac address, without colons or 0s
 	MIRTE_SSID="Mirte-$(echo ${UNIQUE_ID^^})"
 	echo "Generated SSID: $MIRTE_SSID"
-	# add to check: || [[ "$(cat /etc/hostname)" != "$MIRTE_SSID" ]] 
+	# add to check: || [[ "$(cat /etc/hostname)" != "$MIRTE_SSID" ]]
 fi
 
 if [ ! -f /etc/ssid ] || [[ $(cat /etc/hostname) == "Mirte-XXXXXX" ]]; then

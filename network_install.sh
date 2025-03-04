@@ -20,7 +20,6 @@ sudo apt install -y network-manager
 #sudo netplan apply
 #sudo apt purge -y ifupdown
 
-
 # Install wifi-connect
 MY_ARCH=$(arch)
 if [[ "$MY_ARCH" == "armv7l" ]]; then MY_ARCH="rpi"; fi
