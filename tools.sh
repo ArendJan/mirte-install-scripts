@@ -19,5 +19,5 @@ add_rc() {
 add_profile() {
 	lines=$1
 
-	grep -qxF "$lines" ~/.profile || echo "$lines" >>~/.profile
+	grep -qxF "$lines" ~/.profile || sed -i "10i\\$lines\\" ~/.profile
 }
