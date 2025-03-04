@@ -42,6 +42,7 @@ function start_acces_point {
 	nmcli con modify "$(cat /etc/hostname)" 802-11-wireless-security.proto wpa
 	#    nmcli con modify `cat /etc/hostname` 802-11-wireless-security.group ccmp
 	#    nmcli con modify `cat /etc/hostname` 802-11-wireless-security.pairwise ccmp
+	# generate a random channel, can even change to 5Ghz if wanted, then check how to find a correct channel
 	nmcli c modify "$(cat /etc/hostname)" 802-11-wireless.band bg 802-11-wireless.channel "$(shuf -i 1-11 -n 1)"
 	nmcli con down "$(cat /etc/hostname)"
 	sleep 10
@@ -76,7 +77,7 @@ function check_connection {
 	# Get wifi connection if connected
 	if sudo nmcli con show --active | grep wlan0; then
 		# Bugfix (see network_install.sh)
-		sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
+		# sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
 
 		printf 'Connected to wifi connection:'
 		nmcli con show --active | grep wlan0
@@ -128,12 +129,19 @@ function file_empty() {
 
 MIRTE_SRC_DIR=/usr/local/src/mirte
 
-$MIRTE_SRC_DIR/mirte-install-scripts/usb_ethernet.sh
-
 # Create unique SSID
 # This must be run every time on boot, since it should
 # be generated on first boot (so not when generating
 # the image in network_setup.sh)
+
+if false; then # when using mac for hostname.
+	mac=$(ip addr show "wlan0" | awk '/ether/{print $2}')
+	UNIQUE_ID=$(echo -n $mac | tr -cd "1-9A-Fa-f" | tail -c 6) # last 6 characters of mac address, without colons or 0s
+	MIRTE_SSID="Mirte-$(echo ${UNIQUE_ID^^})"
+	echo "Generated SSID: $MIRTE_SSID"
+	# add to check: || [[ "$(cat /etc/hostname)" != "$MIRTE_SSID" ]] 
+fi
+
 if [ ! -f /etc/ssid ] || [[ $(cat /etc/hostname) == "Mirte-XXXXXX" ]]; then
 	UNIQUE_ID=$(tr -cd "1-9A-F" </dev/urandom | head -c 6)
 	MIRTE_SSID=Mirte-$(echo ${UNIQUE_ID^^})
@@ -147,6 +155,8 @@ if [ ! -f /etc/ssid ] || [[ $(cat /etc/hostname) == "Mirte-XXXXXX" ]]; then
 fi
 
 check_ssh_host_keys
+
+$MIRTE_SRC_DIR/mirte-install-scripts/usb_ethernet.sh
 
 check_connection
 
