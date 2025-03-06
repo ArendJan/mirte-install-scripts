@@ -1,5 +1,6 @@
 #!/bin/bash
 set -x
+. /home/mirte/.mirte_settings.sh
 . /opt/ros/humble/setup.bash
 . /home/mirte/mirte_ws/install/setup.bash
 SECONDS=0
