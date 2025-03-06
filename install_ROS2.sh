@@ -107,7 +107,7 @@ add_mirte_settings "export ROS_LOG_DIR=/tmp/ros"
 add_rc "source /home/mirte/.mirte_settings.sh"
 add_rc "# Enable Zenoh and multirobot in .mirte_settings.sh"
 
-add_rc "source /home/mirte/mirte_ws/install/setup.bash" "source /home/mirte/mirte_ws/install/setup.zsh"
+add_rc "source /home/mirte/mirte_ws/install/setup.bash" "# sourced later on"
 add_profile "export ROS_LOG_DIR=/tmp/ros_log/" # log to tmp to not fill up the disk
 # shellcheck source=/dev/null
 source /home/mirte/mirte_ws/install/setup.bash
@@ -174,10 +174,13 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	cd ../../rplidar_ros
 	chmod +x ./scripts/create_udev_rules.sh || true
 	./scripts/create_udev_rules.sh || true
-	# zsh does not work nicely with ros2 autocomplete, so we need to add a function to fix it.
-	# ROS 2 Foxy should have this fixed, but we are using ROS 2 Humble.
-	# TODO: check for ROS2 jazzy
-	cat <<EOF >>/home/mirte/.zshrc
+
+fi
+
+# zsh does not work nicely with ros2 autocomplete, so we need to add a function to fix it.
+# ROS 2 Foxy should have this fixed, but we are using ROS 2 Humble.
+# TODO: check for ROS2 jazzy
+cat <<EOF >>/home/mirte/.zshrc
 sr () { # macro to source the workspace and enable autocompletion. sr stands for source ros, no other command should use this abbreviation.
     . /opt/ros/humble/setup.zsh
     . ~/mirte_ws/install/setup.zsh
@@ -202,7 +205,5 @@ cbr () {
         colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
     fi
 }
-eval "\$(register-python-argcomplete3 ros2)"
-eval "\$(register-python-argcomplete3 colcon)"
+sr
 EOF
-fi
