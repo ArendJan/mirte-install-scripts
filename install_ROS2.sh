@@ -108,7 +108,7 @@ add_rc "source /home/mirte/.mirte_settings.sh"
 add_rc "# Enable Zenoh and multirobot in .mirte_settings.sh"
 
 add_rc "source /home/mirte/mirte_ws/install/setup.bash" "# sourced later on"
-add_profile "export ROS_LOG_DIR=/tmp/ros_log/" # log to tmp to not fill up the disk
+
 # shellcheck source=/dev/null
 source /home/mirte/mirte_ws/install/setup.bash
 

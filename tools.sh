@@ -16,12 +16,6 @@ add_rc() {
 	grep -qxF "$lines" ~/.zshrc || echo "$lines" >>~/.zshrc
 }
 
-add_profile() {
-	lines=$1
-
-	grep -qxF "$lines" ~/.profile || sed -i "10i\\$lines\\" ~/.profile
-}
-
 add_mirte_settings() {
 	lines=$1
 	echo "$lines" >>~/.mirte_settings.sh
