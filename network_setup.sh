@@ -76,8 +76,6 @@ function check_connection {
 
 	# Get wifi connection if connected
 	if sudo nmcli con show --active | grep wlan0; then
-		# Bugfix (see network_install.sh)
-		sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
 
 		printf 'Connected to wifi connection:'
 		nmcli con show --active | grep wlan0
@@ -128,6 +126,8 @@ function file_empty() {
 }
 
 MIRTE_SRC_DIR=/usr/local/src/mirte
+
+sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf || true
 
 # Create unique SSID
 # This must be run every time on boot, since it should

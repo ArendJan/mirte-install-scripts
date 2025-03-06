@@ -101,14 +101,14 @@ git clone https://github.com/RobotWebTools/web_video_server.git -b ros2
 cd .. || exit 1
 rosdep install -y --from-paths src/ --ignore-src --rosdistro $ROS_NAME
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
-add_mirte_settings "export MIRTE_ZENOH=false" # disable zenoh by default, but can be enabled by setting to true
+add_mirte_settings "export MIRTE_ZENOH=false"          # disable zenoh by default, but can be enabled by setting to true
 add_mirte_settings "export MIRTE_USE_MULTIROBOT=false" # TODO: use this in the launch file?
 add_mirte_settings "export ROS_LOG_DIR=/tmp/ros"
 add_rc "source /home/mirte/.mirte_settings.sh"
 add_rc "# Enable Zenoh and multirobot in .mirte_settings.sh"
 
-add_rc "source /home/mirte/mirte_ws/install/setup.bash" "source /home/mirte/mirte_ws/install/setup.zsh"
-add_profile "export ROS_LOG_DIR=/tmp/ros_log/" # log to tmp to not fill up the disk
+add_rc "source /home/mirte/mirte_ws/install/setup.bash" "# sourced later on"
+
 # shellcheck source=/dev/null
 source /home/mirte/mirte_ws/install/setup.bash
 
@@ -174,10 +174,13 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	cd ../../rplidar_ros
 	chmod +x ./scripts/create_udev_rules.sh || true
 	./scripts/create_udev_rules.sh || true
-	# zsh does not work nicely with ros2 autocomplete, so we need to add a function to fix it.
-	# ROS 2 Foxy should have this fixed, but we are using ROS 2 Humble.
-	# TODO: check for ROS2 jazzy
-	cat <<EOF >>/home/mirte/.zshrc
+
+fi
+
+# zsh does not work nicely with ros2 autocomplete, so we need to add a function to fix it.
+# ROS 2 Foxy should have this fixed, but we are using ROS 2 Humble.
+# TODO: check for ROS2 jazzy
+cat <<EOF >>/home/mirte/.zshrc
 sr () { # macro to source the workspace and enable autocompletion. sr stands for source ros, no other command should use this abbreviation.
     . /opt/ros/humble/setup.zsh
     . ~/mirte_ws/install/setup.zsh
@@ -204,4 +207,3 @@ cbr () {
 }
 sr
 EOF
-fi
