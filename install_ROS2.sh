@@ -202,6 +202,7 @@ cbr () {
         colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
     fi
 }
-sr
+eval "\$(register-python-argcomplete3 ros2)"
+eval "\$(register-python-argcomplete3 colcon)"
 EOF
 fi
