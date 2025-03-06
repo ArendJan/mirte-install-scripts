@@ -127,7 +127,6 @@ function file_empty() {
 
 MIRTE_SRC_DIR=/usr/local/src/mirte
 
-
 sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf || true
 
 # Create unique SSID

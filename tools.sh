@@ -22,7 +22,7 @@ add_profile() {
 	grep -qxF "$lines" ~/.profile || sed -i "10i\\$lines\\" ~/.profile
 }
 
-add_mirte_settings () {
+add_mirte_settings() {
 	lines=$1
-	echo "$lines" > ~/.mirte_settings.sh
+	echo "$lines" >>~/.mirte_settings.sh
 }
