@@ -77,7 +77,7 @@ function check_connection {
 	# Get wifi connection if connected
 	if sudo nmcli con show --active | grep wlan0; then
 		# Bugfix (see network_install.sh)
-		# sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
+		sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
 
 		printf 'Connected to wifi connection:'
 		nmcli con show --active | grep wlan0

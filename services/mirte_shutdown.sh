@@ -8,6 +8,8 @@ if ! systemctl list-jobs | grep -q -E 'shutdown.target.*start'; then
 fi
 
 source /home/mirte/.bashrc
+source /home/mirte/.mirte_settings
+source /home/mirte/mirte_ws/install/setup.bash
 touch /home/mirte/.shutdown
 service=/io/oled/oled/set_text
 if [ "$MIRTE_USE_MULTIROBOT" = "true" ]; then
