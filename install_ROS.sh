@@ -21,7 +21,7 @@ sudo apt install -y ros-noetic-ros-base python3-rosdep python3-rosinstall python
 grep -qxF "source /opt/ros/noetic/setup.bash" /home/mirte/.bashrc || echo "source /opt/ros/noetic/setup.bash" >>/home/mirte/.bashrc
 source /opt/ros/noetic/setup.bash
 sudo rosdep init
-rosdep update
+rosdep update --rosdistro=noetic
 
 # Install computer vision libraries
 #TODO: make dependecies of ROS package
