@@ -62,7 +62,7 @@ sudo ln -s $MIRTE_SRC_DIR/mirte-install-scripts/run-avrdude /usr/bin
 sudo bash -c 'echo "mirte ALL = (root) NOPASSWD: /usr/local/bin/arduino-cli" >> /etc/sudoers'
 
 # Install picotool for the Raspberry Pi Pico
-sudo apt install build-essential pkg-config libusb-1.0-0-dev cmake -y
+sudo apt install build-essential pkg-config libusb-1.0-0-dev -y
 cd /tmp/ || exit 1
 git clone https://github.com/raspberrypi/pico-sdk.git # somehow needed for picotool
 export PICO_SDK_PATH=/tmp/pico-sdk
