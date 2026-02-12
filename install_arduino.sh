@@ -68,7 +68,7 @@ git clone https://github.com/raspberrypi/pico-sdk.git # somehow needed for picot
 export PICO_SDK_PATH=/tmp/pico-sdk
 git clone https://github.com/raspberrypi/picotool.git
 cd picotool || exit 1
-sudo cp udev/99-picotool.rules /etc/udev/rules.d/
+sudo cp udev/*.rules /etc/udev/rules.d/
 
 mkdir build
 cd build || exit 1
