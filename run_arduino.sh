@@ -44,12 +44,13 @@ buildpico() {
 }
 
 upload_pico_uart() {
+	sleep 5                             # after ros stopping, pico will reboot bc of watchdog, this takes a few seconds.
 	for port in /dev/serial/by-id/*; do # these are only the usb serial ports, not all the other uart ports.
 		port=$(realpath $port)
 		# send reboot command
 		stty 115200 -F $port
 		echo -ne '\x01\x26' >$port # 1 byte message, message id 0x26==reset_to_bootloader
-		sleep 3
+		sleep 3                    # wait for the pico to reboot
 		# try to upload
 		ERR=false
 		pico_py_serial_flasher $port $PICO_BUILD_LOCATION.elf || ERR=true
