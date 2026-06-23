@@ -29,7 +29,7 @@ function add_service() {
 	sudo systemctl enable $service_name
 }
 
-add_service mirte_battery_watcher.service # check that battery is not empty and shutdown if it is
+add_service mirte-battery-watcher.service # check that battery is not empty and shutdown if it is
 add_service mirte-shutdown.service        # show a message on the screen when shutting down and trigger a shutdown of the robot
 add_service mirte-usb-switch.service      # turn on/off depth cam usb port.
 

@@ -4,8 +4,6 @@ After=mirte-ros.service
 
 [Service]
 User=mirte
-Type=oneshot
-RemainAfterExit=true
 ExecStart=/usr/local/src/mirte/mirte-install-scripts/services/mirte_battery_watcher.sh
 TimeoutSec=30
 [Install]

@@ -37,10 +37,12 @@ while ! systemctl list-jobs | grep -q -E 'shutdown.target.*start' && ! $STOP; do
 	if [ "$(echo $percentage | wc -c)" -gt 1 ]; then
 		# echo "percentage"
 		percentage=$(echo "$percentage" | awk '{print $NF}')
+		# convert to integer *100/1 to avoid floating point comparison
+		percentage=$(echo "scale=0; $percentage * 100/1" | bc)
 		# echo $percentage
-		if (($(echo "$percentage > 0.1" | bc -l))); then
+		if (($(echo "$percentage > 10" | bc -l))); then
 			OK=true
-		elif (($(echo "$percentage <= 0.1" | bc -l))); then
+		elif (($(echo "$percentage <= 10" | bc -l))); then
 			wall "Battery is low, shutting down in 2min"
 			date >>/home/mirte/.shutdown_battery
 			sudo shutdown +2
