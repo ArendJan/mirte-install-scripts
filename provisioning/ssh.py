@@ -1,5 +1,5 @@
 import os
-
+import subprocess
 import provisioning_module
 
 auth_keys_path = "/home/mirte/.ssh/authorized_keys"
@@ -20,6 +20,12 @@ class SSHConfig(provisioning_module.ProvisionModule):
         if not os.path.isfile(auth_keys_path):
             open(auth_keys_path, "a").close()
             os.chmod(auth_keys_path, 0o600)
+            # give ownership to the user mirte, so that the user can add keys later on
+            subprocess.run(
+                f"chown -R mirte:mirte {os.path.dirname(auth_keys_path)}",
+                shell=True,
+                check=True,
+            )
         with open(config_file, "r") as file:
             new_keys = file.readlines()
         if os.path.isfile(auth_keys_path):
@@ -27,6 +33,12 @@ class SSHConfig(provisioning_module.ProvisionModule):
                 existing_keys = file.readlines()
 
         new_keys = list(filter(lambda key: not key in existing_keys, new_keys))
+        subprocess.run(
+            f"chown -R mirte:mirte {os.path.dirname(auth_keys_path)}",
+            shell=True,
+            check=True,
+        )
+        os.chmod(auth_keys_path, 0o600)
         if len(new_keys) == 0:
             print("No new SSH keys to add")
             return
@@ -37,8 +49,6 @@ class SSHConfig(provisioning_module.ProvisionModule):
         # sudo chown -R $USER:$USER ~/.ssh
         # chmod -R 700 ~/.ssh
 
-        os.system(f"chown -R mirte:mirte {os.path.dirname(auth_keys_path)}")
-        os.chmod(auth_keys_path, 0o600)
         print("SSH authorized keys updated successfully.")
 
     async def stop(self):
