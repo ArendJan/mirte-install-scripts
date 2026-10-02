@@ -218,6 +218,12 @@ if [[ $MIRTE_TYPE == "mirte-master" ]]; then
 	sudo ./orbbec_camera/scripts/install_udev_rules.sh || true
 
 fi
+# custom version of teleop-twist-keyboard, since the original one jitters at start.
+# self-built version starts with 2-2026.....
+# https://github.com/ArendJan/teleop_twist_keyboard/tree/add-keyboard-timeout-and-rate-params
+sudo apt install -y --allow-downgrades "ros-$ROS_NAME-teleop-twist-keyboard=2-*"
+# prevent it from being upgraded, it isn't updated anyways.
+sudo apt-mark hold "ros-$ROS_NAME-teleop-twist-keyboard"
 
 # Add colcon top level workspace, this makes it possible to run colcon build from any folder, it will find the workspace and build it. Otherwise it will create a new workspace in the subdirectory.
 pip install git+https://github.com/arendjan/colcon-top-level-workspace.git
