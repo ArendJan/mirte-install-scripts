@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Page</title>
+    <style>
+        body {
+            width: 35em;
+            margin: 0 auto;
+            font-family: Tahoma, Verdana, Arial, sans-serif;
+        }
+        /* some nice styling for the form */
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input {
+            margin-bottom: 15px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .password-field {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        .password-field input {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .toggle-password {
+            padding: 8px;
+            background-color: #777;
+        }
+        .toggle-password:hover {
+            background-color: #666;
+        }
+        .submit-button, button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .submit-button:hover, button:hover {
+            background-color: #45a049;
+        }
+        p {
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MIRTE Password Change</h1>
+        <form>
+            <label for="password">Old password:</label>
+            <div class="password-field">
+                <input type="text" id="password" name="password" required>
+                <button type="button" class="toggle-password" data-target="password">Hide</button>
+            </div>
+            <label for="new-password">New password:</label>
+            <div class="password-field">
+                <input type="text" id="new-password" name="new-password" required>
+                <button type="button" class="toggle-password" data-target="new-password">Hide</button>
+            </div>
+            <input type="submit"   class="submit-button" value="Change Password">
+
+            <!-- <button type="submit">Submit</button> -->
+        </form>
+        <p>The new password will be used to log in to the robot's web services, SSH and the robot's WiFi network. Username is always mirte.
+            <br>
+            Only letters, numbers and - and _ characters are allowed. The new password must be at least 8 characters long.<br>
+            If you haven't changed the password yet, you need to do it before you can access the robot's services from external IPs.<br>
+            Default (old) password is <code>mirte_mirte</code>.
+        </p>
+    </div>
+    <script>
+
+        function resetButton() {
+            const submitButton = document.querySelector('.submit-button');
+            submitButton.value = 'Change Password';
+            submitButton.disabled = false;
+        }
+
+        document.querySelector('form').addEventListener('submit', function(event) {
+            const newPassword = document.getElementById('new-password').value;
+            const oldPassword = document.getElementById('password').value;
+            
+            // change button text to "Changing..." and disable it
+            const submitButton = document.querySelector('.submit-button');
+            submitButton.value = 'Changing...';
+            submitButton.disabled = true;
+
+            if (newPassword.length < 8) {
+                event.preventDefault();
+                resetButton();
+                alert('New password must be at least 8 characters long.');
+                return;
+            }
+
+            // remove strange characters from new password
+            // only allow letters, numbers and - and _ characters
+            const regex = /^[a-zA-Z0-9-_]+$/;
+            if (!regex.test(newPassword)) {
+                event.preventDefault();
+                resetButton();
+                alert('New password can only contain letters, numbers, - and _ .');
+                return;
+            }
+
+
+            event.preventDefault();
+            // request /change_password with old password and new password
+            fetch('/password/change_password.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ old_password: oldPassword, new_password: newPassword })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.ok) {
+                    alert('Password changed successfully. Your wifi password will also be changed to the new password after a reboot.');
+                } else {
+                    if(data.msg.includes("(return code: 1)")) {
+                        alert('Error changing password: old password is probably incorrect.');
+                    } else {
+                        alert('Error changing password: ' + data.msg);
+                    }
+                }
+                resetButton();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resetButton();
+                alert('An error occurred while changing the password.');
+            });
+        });
+    </script>
+    <script>
+        document.querySelectorAll('.toggle-password').forEach(function(button) {
+            button.addEventListener('click', function() {
+                const input = document.getElementById(button.dataset.target);
+                const isHidden = input.type === 'password';
+                input.type = isHidden ? 'text' : 'password';
+                button.textContent = isHidden ? 'Hide' : 'Show';
+            });
+        });
+    </script>
+</body>
+</html>

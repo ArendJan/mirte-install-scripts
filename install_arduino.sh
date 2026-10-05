@@ -51,7 +51,7 @@ else
 	echo "Only installing tools to upload to Pico with default uf2"
 	# download latest picotool for current arch linux
 	arch=$(uname -m)
-	gh release download -R raspberrypi/pico-sdk-tools -p "picotool-*-$arch-lin.tar.gz" -O /tmp/picotool-latest-$arch-lin.tar.gz
+	curl -s https://api.github.com/repos/raspberrypi/pico-sdk-tools/releases/latest | grep -F "browser_download_url" | awk -F\" '{print $4}' | grep "picotool-.*-$arch-lin.tar.gz" | wget -i - -O /tmp/picotool-latest-$arch-lin.tar.gz
 	# Check that the file was downloaded and is a valid tar.gz
 	if [ ! -s /tmp/picotool-latest-$arch-lin.tar.gz ]; then
 		echo "Error: Failed to download picotool tarball for architecture $arch."
